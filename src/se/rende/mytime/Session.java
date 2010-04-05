@@ -29,7 +29,6 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -63,7 +62,6 @@ public class Session extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		Uri intentData = getIntent().getData();
 		currentSessionId = Long.parseLong(intentData.getLastPathSegment());
-		Log.d("session", "sessionId=" + currentSessionId);
 		setContentView(R.layout.session);
 		startDateView = (Button) findViewById(R.id.SessionStartDate);
 		startDateView.setOnClickListener(this);
