@@ -20,10 +20,6 @@ import static android.provider.BaseColumns._ID;
 import static se.rende.mytime.Constants.AUTHORITY;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
-
-import java.util.Arrays;
-import java.util.List;
-
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -32,7 +28,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 /**
  * Defines the database data.
@@ -40,7 +35,6 @@ import android.util.Log;
  * @author Dag Rende
  */
 public class MyTimeContentProvider extends ContentProvider {
-	private static final String TAG = MyTimeContentProvider.class.getSimpleName();
 	private static final int PROJECTS = 1;
 	private static final int PROJECTS_ID = 2;
 	private static final int SESSIONS = 3;
@@ -84,7 +78,6 @@ public class MyTimeContentProvider extends ContentProvider {
 				selection = appendRowId(selection, id);
 			}
 			// Get the database and run the query
-			Log.d(TAG, "query selection=" + selection + " selectionArgs=" + getArgs(selectionArgs));
 			SQLiteDatabase db = myTimeData.getReadableDatabase();
 			cursor = db.query("session", projection, selection,
 					selectionArgs, null, null, orderBy);
@@ -96,13 +89,6 @@ public class MyTimeContentProvider extends ContentProvider {
 		// source data changes
 		cursor.setNotificationUri(getContext().getContentResolver(), uri);
 		return cursor;
-	}
-
-	private List<String> getArgs(String[] selectionArgs) {
-		if (selectionArgs == null) {
-			return null;
-		}
-		return Arrays.asList(selectionArgs);
 	}
 
 	@Override
@@ -136,7 +122,6 @@ public class MyTimeContentProvider extends ContentProvider {
 		} else if (uriMatcher.match(uri) == SESSIONS) {	
 			// Insert into database
 			long id = db.insertOrThrow("session", null, values);
-			Log.d(TAG, "insert values=" + values);
 			
 			// Notify any watchers of the change
 			newUri = ContentUris.withAppendedId(CONTENT_URI_SESSION, id);
@@ -158,7 +143,7 @@ public class MyTimeContentProvider extends ContentProvider {
 			break;
 		case PROJECTS_ID:
 			id = Long.parseLong(uri.getPathSegments().get(1));
-			int n = db.delete("session", "project_id=" + id, null);
+			db.delete("session", "project_id=" + id, null);
 			String whereClause = appendRowId(selection, id);
 			count = db.delete("project", whereClause, selectionArgs);
 			break;
@@ -167,9 +152,7 @@ public class MyTimeContentProvider extends ContentProvider {
 			break;
 		case SESSIONS_ID:
 			id = Long.parseLong(uri.getPathSegments().get(1));
-			String whereClause2 = appendRowId(selection, id);
-			Log.d(TAG, "delete whereClause=" + whereClause2 + " selectionArgs=" + getArgs(selectionArgs));
-			count = db.delete("session", whereClause2, selectionArgs);
+			count = db.delete("session", appendRowId(selection, id), selectionArgs);
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown URI " + uri);
