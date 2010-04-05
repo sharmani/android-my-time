@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_projects">No Projects - Use Add Project menu</string>
+    <string name="no_sessions">No Sessions</string>
+    <string name="hello">My Time</string>
+    <string name="app_name">My Time</string>
+	<string name="add_project">Add Project</string>
+	<string name="edit_project">Edit Project</string>
+	<string name="delete_project">Delete Project</string>
+	<string name="delete_session">Delete Session</string>
+	<string name="new_project">New Project</string>
+	<string name="new_project_name_label">Project Name</string>
+	<string name="ok_button_label">OK</string>
+	<string name="cancel_button_label">Cancel</string>
+	<string name="StartButtonLabel">Start</string>
+	<string name="StopButtonLabel">Stop</string>
+	<string name="sessions_label">Sessions</string>
+	<string name="session_label">Session</string>
+	<string name="FromLabel"><b>From</b></string>
+	<string name="ToLabel"><b>To</b></string>
+	<string name="WhatLabel"><b>What</b></string> 
+	<string name="about_menu">About</string>
+	<string name="settings_menu_label">Settings</string>
+	<string name="precision_setting_label">Precision</string>
+	<string name="precision_setting_summary">Session hours precision</string>
+</resources>
