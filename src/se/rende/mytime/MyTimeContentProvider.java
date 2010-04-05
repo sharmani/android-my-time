@@ -158,8 +158,8 @@ public class MyTimeContentProvider extends ContentProvider {
 			break;
 		case PROJECTS_ID:
 			id = Long.parseLong(uri.getPathSegments().get(1));
+			int n = db.delete("session", "project_id=" + id, null);
 			String whereClause = appendRowId(selection, id);
-			Log.d(TAG, "delete whereClause=" + whereClause + " selectionArgs=" + getArgs(selectionArgs));
 			count = db.delete("project", whereClause, selectionArgs);
 			break;
 		case SESSIONS:

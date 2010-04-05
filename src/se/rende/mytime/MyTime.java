@@ -25,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -133,8 +134,8 @@ public class MyTime extends ListActivity {
 	}
 	
 	private void deleteProject(long id) {
-		getContentResolver().delete(CONTENT_URI_PROJECT, "_id=?",
-				new String[] { "" + id });
+		Uri newUri = ContentUris.withAppendedId(CONTENT_URI_PROJECT, id);
+		getContentResolver().delete(newUri, null, null);
 	}
 
 	private void editProjectName(final long id) {
