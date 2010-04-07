@@ -16,6 +16,7 @@
 
 package se.rende.mytime;
 
+import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +35,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 /**
@@ -56,6 +58,9 @@ public class Session extends Activity implements OnClickListener {
 	private long startDateTime;
 	private long endDateTime;
 	private String comment;
+	private long currentProjectId;
+	private String projectName;
+	private TextView projectNameView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,8 @@ public class Session extends Activity implements OnClickListener {
 		Uri intentData = getIntent().getData();
 		currentSessionId = Long.parseLong(intentData.getLastPathSegment());
 		setContentView(R.layout.session);
+
+		projectNameView = (TextView) findViewById(R.id.sessionProjectName);
 		startDateView = (Button) findViewById(R.id.SessionStartDate);
 		startDateView.setOnClickListener(this);
 		startTimeView = (Button) findViewById(R.id.SessionStartTime);
@@ -74,32 +81,39 @@ public class Session extends Activity implements OnClickListener {
 		commentView = (EditText) findViewById(R.id.SessionCommentEditText);
 
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
-				new String[] { "start", "end", "comment" }, "_id=?",
+				new String[] { "start", "end", "comment", "project_id" }, "_id=?",
 				new String[] { "" + currentSessionId }, null);
 		if (cursor.moveToNext()) {
 			// found a session in progress
 			startDateTime = cursor.getLong(0);
 			endDateTime = cursor.getLong(1);
 			comment = cursor.getString(2);
+			currentProjectId = cursor.getLong(3);
+			projectName = getProjectName(currentProjectId);
 		}
 		showSession();
+		
+	}
+	
+	private String getProjectName(long projectId) {
+		Cursor projectCursor = getContentResolver().query(CONTENT_URI_PROJECT,
+				new String[] { "name" }, "_id=" + projectId, null, null);
+		if (projectCursor.moveToNext()) {
+			return projectCursor.getString(0);
+		}
+		return "";
 	}
 
 	private void showSession() {
-		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
-				new String[] { "start", "end", "comment" }, "_id=?",
-				new String[] { "" + currentSessionId }, null);
-		if (cursor.moveToNext()) {
-			// found a session in progress
-			startDateView.setText(dateFormat.format(startDateTime));
-			startTimeView.setText(timeFormat.format(startDateTime));
-			isRunning = (endDateTime == 0);
-			endDateView.setText(isRunning ? "running" : dateFormat
-					.format(endDateTime));
-			endTimeView.setText(isRunning ? "" : timeFormat
-					.format(endDateTime));
-			commentView.setText(comment);
-		}
+		projectNameView.setText(projectName);
+		startDateView.setText(dateFormat.format(startDateTime));
+		startTimeView.setText(timeFormat.format(startDateTime));
+		isRunning = (endDateTime == 0);
+		endDateView.setText(isRunning ? "running" : dateFormat
+				.format(endDateTime));
+		endTimeView.setText(isRunning ? "" : timeFormat
+				.format(endDateTime));
+		commentView.setText(comment);
 	}
 
 	@Override
