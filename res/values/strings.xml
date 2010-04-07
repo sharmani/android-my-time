@@ -23,4 +23,5 @@
 	<string name="settings_menu_label">Settings</string>
 	<string name="precision_setting_label">Precision</string>
 	<string name="precision_setting_summary">Session hours precision</string>
+<string name="add_session">Add Session</string>
 </resources>
