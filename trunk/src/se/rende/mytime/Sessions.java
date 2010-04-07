@@ -31,6 +31,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,6 +95,41 @@ public class Sessions extends ListActivity implements OnClickListener {
 			return cursor.getString(0);
 		}
 		return "";
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.sessionsmenu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		case R.id.addSession:
+			addSession();
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 */
+	private void addSession() {
+		ContentValues values = new ContentValues();
+		values.put("project_id", currentProjectId);
+		long timeMillis = System.currentTimeMillis();
+		values.put("start", timeMillis);
+		values.put("end", timeMillis);
+		Uri newSessionUri = getContentResolver().insert(CONTENT_URI_SESSION, values);
+		
+		Intent intent = new Intent(this, Session.class);
+		intent.setData(newSessionUri);
+		startActivity(intent);
 	}
 
 	@Override
