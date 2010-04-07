@@ -3,6 +3,9 @@
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
 	android:orientation="vertical" android:paddingLeft="10dip"
 	android:paddingRight="10dip" android:paddingTop="10dip">
+	<TextView android:id="@+id/sessionProjectName"
+			android:layout_width="fill_parent" android:layout_height="wrap_content"
+			android:textSize="22sp" android:paddingBottom="10dip" android:text="Saab"/>
 	<TextView android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:text="@string/FromLabel"></TextView>
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -17,6 +17,7 @@
 package se.rende.mytime;
 
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
+import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -61,18 +62,38 @@ public class Sessions extends ListActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 
 		Uri intentData = getIntent().getData();
-		currentProjectId = Long.parseLong(intentData.getLastPathSegment());
+		currentProjectId = Long.parseLong(intentData.getLastPathSegment());	
 
 		setContentView(R.layout.sessions);
+		
+		TextView projectNameView = (TextView) findViewById(R.id.sessionsProjectName);
+		projectNameView.setText(getProjectName());
+		
 		getListView().setOnCreateContextMenuListener(this);
-		findViewById(R.id.StartButton).setOnClickListener(this);
-		findViewById(R.id.StopButton).setOnClickListener(this);
+		startButton = findViewById(R.id.StartButton);
+		startButton.setOnClickListener(this);
+		stopButton = findViewById(R.id.StopButton);
+		stopButton.setOnClickListener(this);
 		
 		precision = Settings.getPrecision(this);
 		hoursFormat.setMaximumFractionDigits(5);
 
 		showSessions(getSessions(currentProjectId));
 		
+		adjustButtonEnablement();
+		
+	}
+
+	/**
+	 * @return
+	 */
+	private String getProjectName() {
+		Cursor cursor = getContentResolver().query(CONTENT_URI_PROJECT,
+				new String[] { "name" }, "_id=" + currentProjectId, null, null);
+		if (cursor.moveToNext()) {
+			return cursor.getString(0);
+		}
+		return "";
 	}
 
 	@Override
@@ -170,6 +191,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 	}
 	
 	private final SessionListViewBinder viewBinder = new SessionListViewBinder();
+	private View startButton;
+	private View stopButton;
 
 	private void showSessions(Cursor cursor) {
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
@@ -197,6 +220,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 				values.put("project_id", currentProjectId);
 				values.put("start", System.currentTimeMillis());
 				getContentResolver().insert(CONTENT_URI_SESSION, values);
+				startButton.setEnabled(false);
+				stopButton.setEnabled(true);
 			}
 			break;
 
@@ -212,8 +237,26 @@ public class Sessions extends ListActivity implements OnClickListener {
 				values.put("end", System.currentTimeMillis());
 				getContentResolver().update(CONTENT_URI_SESSION, values,
 						"_id=?", new String[] { "" + sessionId });
+				startButton.setEnabled(true);
+				stopButton.setEnabled(false);
 			}
 			break;
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	private void adjustButtonEnablement() {
+		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
+				new String[] { "project_id" }, "end is null", null, null);
+		boolean isRunning = false;
+		long projectId = 0;
+		if (cursor.moveToNext()) {
+			isRunning = true;
+			projectId = cursor.getLong(0);
+		}
+		startButton.setEnabled(!isRunning);
+		stopButton.setEnabled(isRunning && projectId == currentProjectId);
 	}
 }
