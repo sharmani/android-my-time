@@ -33,7 +33,7 @@ import android.widget.TextView;
  * 
  * @author Dag Rende
  */
-public class About extends Activity {
+public class About extends Activity { 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

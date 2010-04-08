@@ -145,11 +145,11 @@ public class Session extends Activity implements OnClickListener {
 			datePickerDialog.show();
 		} else if (v == startTimeView) {
 			cal.setTimeInMillis(startDateTime);
-			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(true), cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), true);
+			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(true), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
 			timePickerDialog.show();
 		} else if (v == endTimeView) {
 			cal.setTimeInMillis(endDateTime);
-			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(false), cal.get(Calendar.HOUR), cal.get(Calendar.MINUTE), true);
+			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(false), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
 			timePickerDialog.show();
 		}
 	}
@@ -189,7 +189,7 @@ public class Session extends Activity implements OnClickListener {
 		public void onTimeSet(TimePicker view, int hour, int minute) {
 			Calendar cal = GregorianCalendar.getInstance();
 			cal.setTimeInMillis(isStart ? startDateTime : endDateTime);
-			cal.set(Calendar.HOUR, hour);
+			cal.set(Calendar.HOUR_OF_DAY, hour);
 			cal.set(Calendar.MINUTE, minute);
 			if (isStart) {
 				startDateTime = cal.getTimeInMillis();
