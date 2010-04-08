@@ -16,8 +16,8 @@
 
 package se.rende.mytime;
 
-import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
+import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -82,7 +83,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 		showSessions(getSessions(currentProjectId));
 		
 		adjustButtonEnablement();
-		
 	}
 
 	/**
@@ -164,6 +164,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 	private void deleteSession(long id) {
 		getContentResolver().delete(CONTENT_URI_SESSION, "_id=?",
 				new String[] { "" + id });
+		adjustButtonEnablement();
 	}
 
 	public class SessionListViewBinder implements
