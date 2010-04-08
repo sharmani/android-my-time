@@ -18,11 +18,6 @@ package se.rende.mytime;
 
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
-
-import java.util.Calendar;
-
-import se.rende.mytime.Sessions.SessionListViewBinder;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentUris;
