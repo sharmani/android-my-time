@@ -28,7 +28,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 
-/**
+/** 
  * Handles the about box.
  * 
  * @author Dag Rende
