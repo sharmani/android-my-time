@@ -30,6 +30,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -106,13 +107,11 @@ public class Session extends Activity implements OnClickListener {
 
 	private void showSession() {
 		projectNameView.setText(projectName);
-		startDateView.setText(dateFormat.format(startDateTime));
-		startTimeView.setText(timeFormat.format(startDateTime));
+		startDateView.setText(DateFormat.getDateFormat(this).format(startDateTime));
+		startTimeView.setText(DateFormat.getTimeFormat(this).format(startDateTime));
 		isRunning = (endDateTime == 0);
-		endDateView.setText(isRunning ? "running" : dateFormat
-				.format(endDateTime));
-		endTimeView.setText(isRunning ? "" : timeFormat
-				.format(endDateTime));
+		endDateView.setText(isRunning ? "running" : DateFormat.getDateFormat(this).format(endDateTime));
+		endTimeView.setText(isRunning ? "" : DateFormat.getTimeFormat(this).format(endDateTime));
 		commentView.setText(comment);
 	}
 
@@ -145,11 +144,11 @@ public class Session extends Activity implements OnClickListener {
 			datePickerDialog.show();
 		} else if (v == startTimeView) {
 			cal.setTimeInMillis(startDateTime);
-			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(true), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(true), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), DateFormat.is24HourFormat(this));
 			timePickerDialog.show();
 		} else if (v == endTimeView) {
 			cal.setTimeInMillis(endDateTime);
-			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(false), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
+			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(false), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), DateFormat.is24HourFormat(this));
 			timePickerDialog.show();
 		}
 	}

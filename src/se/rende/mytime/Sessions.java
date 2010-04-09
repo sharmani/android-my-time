@@ -30,6 +30,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -188,12 +189,12 @@ public class Sessions extends ListActivity implements OnClickListener {
 								&& month == cal.get(Calendar.MONTH)
 								&& day == cal.get(Calendar.DAY_OF_MONTH)) {
 							// same date - display only time
-							timeView.setText(timeFormat.format(time));
+							timeView.setText(DateFormat.getTimeFormat(Sessions.this).format(time));
 						} else {
-							timeView.setText(dateTimeFormat.format(time));
+							timeView.setText(DateFormat.getDateFormat(Sessions.this).format(time) + " " + DateFormat.getTimeFormat(Sessions.this).format(time));
 						}
 					} else {
-						timeView.setText(dateTimeFormat.format(time));
+						timeView.setText(DateFormat.getDateFormat(Sessions.this).format(time) + " " + DateFormat.getTimeFormat(Sessions.this).format(time));
 					}
 				}
 				return true;
