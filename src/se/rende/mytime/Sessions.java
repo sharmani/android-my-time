@@ -22,6 +22,7 @@ import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import android.app.ListActivity;
 import android.content.ContentUris;
@@ -211,20 +212,52 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 3) {
+				TextView hoursView = (TextView) view;
+				long startTime = cursor.getLong(0);
 				long endTime = cursor.getLong(1);
 				if (cursor.isNull(1)) {
 					endTime = System.currentTimeMillis();
 				}
-				long msTime = endTime - cursor.getLong(0);
-				TextView hoursView = (TextView) view;
-				int roundedTime = (int)((float)msTime / precision / 3600000f + 0.5f);
-				hoursView.setText(hoursFormat.format(roundedTime * precision) + "h");
+				float workHours = getWorkHours(startTime, endTime);
+				hoursView.setText(hoursFormat.format(workHours) + "h");
 				return true;
 			}
 
 			return false;
 		}
-
+	}
+	
+	private float getWorkHours(long startTime, long endTime) {
+		long lunchMsExclusion = 0;
+		if (Settings.isExcludeLunchTime(this)) {
+			long lunchStart = Settings.getLunchStart(this);
+			long lunchEnd = Settings.getLunchEnd(this);
+			
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(startTime);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			long dayStart = cal.getTimeInMillis();
+			Date dateStartDate = new Date(dayStart);
+			Date lunchStartDate =new Date(dayStart + lunchStart);
+			Date lunchEndDate =new Date(dayStart + lunchEnd);
+			while (true) {
+				long start = Math.max(startTime, dayStart + lunchStart);
+				long end = Math.min(endTime, dayStart + lunchEnd);
+				long overlap = Math.max(0, end - start);
+				if (overlap == 0) {
+					break;
+				}
+				lunchMsExclusion += overlap;
+				dayStart += 24 * 3600 * 1000;	// to next day start
+			}
+		}
+		long msTime = endTime - startTime - lunchMsExclusion;
+		int roundedTime = (int)((float)msTime / precision / 3600000f + 0.5f);
+		float workHours = roundedTime * precision;
+		return workHours;
 	}
 	
 	private final SessionListViewBinder viewBinder = new SessionListViewBinder();
