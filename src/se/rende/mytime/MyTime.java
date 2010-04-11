@@ -76,10 +76,15 @@ public class MyTime extends ListActivity {
 	private long getRunningProjectId() {
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "project_id" }, "end is null", null, null);
-		if (cursor.moveToNext()) {
-			return cursor.getLong(0);
+		try {
+			if (cursor.moveToNext()) {
+				return cursor.getLong(0);
+			}
+			
+			return 0;
+		} finally {
+			cursor.close();
 		}
-		return 0;
 	}
 
 	@Override
@@ -184,29 +189,33 @@ public class MyTime extends ListActivity {
 		Cursor cursor = getContentResolver().query(CONTENT_URI_PROJECT,
 				new String[] { "name" }, "_id=?", new String[] { "" + id },
 				null);
-		if (cursor.moveToNext()) {
-			String projectName = cursor.getString(0);
-			final EditText nameEditText = new EditText(this);
-			nameEditText.setText(projectName);
+		try {
+			if (cursor.moveToNext()) {
+				String projectName = cursor.getString(0);
+				final EditText nameEditText = new EditText(this);
+				nameEditText.setText(projectName);
 
-			new AlertDialog.Builder(this).setMessage(
-					getString(R.string.new_project_name_label)).setView(
-					nameEditText).setPositiveButton(
-					getString(R.string.ok_button_label), new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							setProjectName(id, nameEditText.getText()
-									.toString());
-						}
-					}).setNegativeButton(
-					getString(R.string.cancel_button_label),
-					new OnClickListener() {
-						@Override
-						public void onClick(DialogInterface dialog, int which) {
-							dialog.dismiss();
-						}
-					}).show();
+				new AlertDialog.Builder(this).setMessage(
+						getString(R.string.new_project_name_label)).setView(
+						nameEditText).setPositiveButton(
+						getString(R.string.ok_button_label), new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								setProjectName(id, nameEditText.getText()
+										.toString());
+							}
+						}).setNegativeButton(
+						getString(R.string.cancel_button_label),
+						new OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								dialog.dismiss();
+							}
+						}).show();
 
+			}
+		} finally {
+			cursor.close();
 		}
 	}
 

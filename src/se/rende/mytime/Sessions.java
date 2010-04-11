@@ -92,10 +92,14 @@ public class Sessions extends ListActivity implements OnClickListener {
 	private String getProjectName() {
 		Cursor cursor = getContentResolver().query(CONTENT_URI_PROJECT,
 				new String[] { "name" }, "_id=" + currentProjectId, null, null);
-		if (cursor.moveToNext()) {
-			return cursor.getString(0);
+		try {
+			if (cursor.moveToNext()) {
+				return cursor.getString(0);
+			}
+			return "";
+		} finally {
+			cursor.close();
 		}
-		return "";
 	}
 
 	@Override
@@ -279,38 +283,44 @@ public class Sessions extends ListActivity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		Cursor cursor = null;
-		switch (v.getId()) {
-		case R.id.StartButton:
-			// start a new session if not any session in progress
-			cursor = getContentResolver().query(CONTENT_URI_SESSION,
-					new String[] { "end" }, "end is null", null, null);
-			if (!cursor.moveToNext()) {
-				// did not find any session in progress for any project
-				ContentValues values = new ContentValues();
-				values.put("project_id", currentProjectId);
-				values.put("start", System.currentTimeMillis());
-				getContentResolver().insert(CONTENT_URI_SESSION, values);
-				startButton.setEnabled(false);
-				stopButton.setEnabled(true);
-			}
-			break;
+		try {
+			switch (v.getId()) {
+			case R.id.StartButton:
+				// start a new session if not any session in progress
+				cursor = getContentResolver().query(CONTENT_URI_SESSION,
+						new String[] { "end" }, "end is null", null, null);
+				if (!cursor.moveToNext()) {
+					// did not find any session in progress for any project
+					ContentValues values = new ContentValues();
+					values.put("project_id", currentProjectId);
+					values.put("start", System.currentTimeMillis());
+					getContentResolver().insert(CONTENT_URI_SESSION, values);
+					startButton.setEnabled(false);
+					stopButton.setEnabled(true);
+				}
+				break;
 
-		case R.id.StopButton:
-			// end session in progress for this project, if any
-			cursor = getContentResolver().query(CONTENT_URI_SESSION,
-					new String[] { "_id" }, "project_id=? and end is null",
-					new String[] { "" + currentProjectId }, null);
-			while (cursor.moveToNext()) {
-				// found a session in progress
-				long sessionId = cursor.getLong(0);
-				ContentValues values = new ContentValues();
-				values.put("end", System.currentTimeMillis());
-				getContentResolver().update(CONTENT_URI_SESSION, values,
-						"_id=?", new String[] { "" + sessionId });
-				startButton.setEnabled(true);
-				stopButton.setEnabled(false);
+			case R.id.StopButton:
+				// end session in progress for this project, if any
+				cursor = getContentResolver().query(CONTENT_URI_SESSION,
+						new String[] { "_id" }, "project_id=? and end is null",
+						new String[] { "" + currentProjectId }, null);
+				while (cursor.moveToNext()) {
+					// found a session in progress
+					long sessionId = cursor.getLong(0);
+					ContentValues values = new ContentValues();
+					values.put("end", System.currentTimeMillis());
+					getContentResolver().update(CONTENT_URI_SESSION, values,
+							"_id=?", new String[] { "" + sessionId });
+					startButton.setEnabled(true);
+					stopButton.setEnabled(false);
+				}
+				break;
 			}
-			break;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
 		}
 	}
 	
@@ -320,13 +330,17 @@ public class Sessions extends ListActivity implements OnClickListener {
 	private void adjustButtonEnablement() {
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "project_id" }, "end is null", null, null);
-		boolean isRunning = false;
-		long projectId = 0;
-		if (cursor.moveToNext()) {
-			isRunning = true;
-			projectId = cursor.getLong(0);
+		try {
+			boolean isRunning = false;
+			long projectId = 0;
+			if (cursor.moveToNext()) {
+				isRunning = true;
+				projectId = cursor.getLong(0);
+			}
+			startButton.setEnabled(!isRunning);
+			stopButton.setEnabled(isRunning && projectId == currentProjectId);
+		} finally {
+			cursor.close();
 		}
-		startButton.setEnabled(!isRunning);
-		stopButton.setEnabled(isRunning && projectId == currentProjectId);
 	}
 }

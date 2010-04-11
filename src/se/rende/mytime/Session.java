@@ -84,13 +84,17 @@ public class Session extends Activity implements OnClickListener {
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "start", "end", "comment", "project_id" }, "_id=?",
 				new String[] { "" + currentSessionId }, null);
-		if (cursor.moveToNext()) {
-			// found a session in progress
-			startDateTime = cursor.getLong(0);
-			endDateTime = cursor.getLong(1);
-			comment = cursor.getString(2);
-			currentProjectId = cursor.getLong(3);
-			projectName = getProjectName(currentProjectId);
+		try {
+			if (cursor.moveToNext()) {
+				// found a session in progress
+				startDateTime = cursor.getLong(0);
+				endDateTime = cursor.getLong(1);
+				comment = cursor.getString(2);
+				currentProjectId = cursor.getLong(3);
+				projectName = getProjectName(currentProjectId);
+			}
+		} finally {
+			cursor.close();
 		}
 		showSession();
 		
@@ -99,10 +103,14 @@ public class Session extends Activity implements OnClickListener {
 	private String getProjectName(long projectId) {
 		Cursor projectCursor = getContentResolver().query(CONTENT_URI_PROJECT,
 				new String[] { "name" }, "_id=" + projectId, null, null);
-		if (projectCursor.moveToNext()) {
-			return projectCursor.getString(0);
+		try {
+			if (projectCursor.moveToNext()) {
+				return projectCursor.getString(0);
+			}
+			return "";
+		} finally {
+			projectCursor.close();
 		}
-		return "";
 	}
 
 	private void showSession() {
