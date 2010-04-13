@@ -19,10 +19,10 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
+import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.TreeMap;
 
 import android.app.ListActivity;
 import android.content.ContentUris;
@@ -51,39 +51,122 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  * @author Dag Rende
  */
 public class Sessions extends ListActivity implements OnClickListener {
-	private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yy-MM-dd HH:mm");
-	private static final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
 	private static final NumberFormat hoursFormat = NumberFormat.getInstance();
-	private static final String[] FROM = { "start", "end", "comment", "_id" };
+	private static final String[] FROM = { "start", "end", "comment", "_id",
+			"_id+1", "_id+2", "_id+3", "_id+4" };
 	private static final int[] TO = { R.id.start_date_time, R.id.end_date_time,
-			R.id.comment, R.id.hours };
+			R.id.comment, R.id.hours, R.id.month_total_label, R.id.month_total,
+			R.id.week_total_label, R.id.week_total };
 	private long currentProjectId = 1;
-	float precision = 0.25f;
+	private float precision = 0.25f;
+	private TreeMap<Long, Float> monthTotals = new TreeMap<Long, Float>();
+	private TreeMap<Long, Float> weekTotals = new TreeMap<Long, Float>();
+	private DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		Uri intentData = getIntent().getData();
-		currentProjectId = Long.parseLong(intentData.getLastPathSegment());	
+		currentProjectId = Long.parseLong(intentData.getLastPathSegment());
 
 		setContentView(R.layout.sessions);
-		
+
 		TextView projectNameView = (TextView) findViewById(R.id.sessionsProjectName);
 		projectNameView.setText(getProjectName());
-		
+
 		getListView().setOnCreateContextMenuListener(this);
 		startButton = findViewById(R.id.StartButton);
 		startButton.setOnClickListener(this);
 		stopButton = findViewById(R.id.StopButton);
 		stopButton.setOnClickListener(this);
-		
+
 		precision = Settings.getPrecision(this);
 		hoursFormat.setMaximumFractionDigits(5);
 
 		showSessions(getSessions(currentProjectId));
-		
+
 		adjustButtonEnablement();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		calculateTotals(monthTotals, weekTotals);
+	}
+
+	/**
+	 * Clear both totals and add each totals for this project keyed by the id of
+	 * the last session object for each period.
+	 * 
+	 * @param monthTotals
+	 *            total hours by the id of last session this month
+	 * @param weekTotals
+	 *            total hours by the id of last session this week
+	 */
+	private void calculateTotals(TreeMap<Long, Float> monthTotals,
+			TreeMap<Long, Float> weekTotals) {
+		monthTotals.clear();
+		weekTotals.clear();
+		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
+				new String[] { "_id", "start", "end" },
+				"project_id=? and end is not null",
+				new String[] { "" + currentProjectId }, "start desc");
+		try {
+			String currentMonthKey = "";
+			float currentMonthTotal = 0f;
+			long firstSessionIdOfMonth = 0;
+
+			String currentWeekKey = "";
+			float currentWeekTotal = 0f;
+			long firstSessionIdOfWeek = 0;
+
+			while (cursor.moveToNext()) {
+				// month
+				// week
+				long sessionId = cursor.getLong(0);
+				long startTime = cursor.getLong(1);
+				long endTime = cursor.getLong(2);
+
+				Calendar cal = Calendar.getInstance();
+				cal.setTimeInMillis(startTime);
+				String monthKey = cal.get(Calendar.YEAR) + "-"
+						+ cal.get(Calendar.MONTH);
+				String weekKey = cal.get(Calendar.YEAR) + "-"
+						+ cal.get(Calendar.WEEK_OF_YEAR);
+
+				if (!currentMonthKey.equals(monthKey)) {
+					// beginning of a new month
+					if (currentMonthKey.length() > 0) {
+						monthTotals.put(firstSessionIdOfMonth,
+								currentMonthTotal);
+					}
+					currentMonthKey = monthKey;
+					currentMonthTotal = 0f;
+					firstSessionIdOfMonth = sessionId;
+				}
+				currentMonthTotal += getWorkHours(startTime, endTime);
+
+				if (!currentWeekKey.equals(weekKey)) {
+					// beginning of a new week
+					if (currentWeekKey.length() > 0) {
+						weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
+					}
+					currentWeekKey = weekKey;
+					currentWeekTotal = 0f;
+					firstSessionIdOfWeek = sessionId;
+				}
+				currentWeekTotal += getWorkHours(startTime, endTime);
+			}
+			if (currentMonthKey.length() > 0) {
+				monthTotals.put(firstSessionIdOfMonth, currentMonthTotal);
+			}
+			if (currentWeekKey.length() > 0) {
+				weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
+			}
+		} finally {
+			cursor.close();
+		}
 	}
 
 	/**
@@ -130,8 +213,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 		long timeMillis = System.currentTimeMillis();
 		values.put("start", timeMillis);
 		values.put("end", timeMillis);
-		Uri newSessionUri = getContentResolver().insert(CONTENT_URI_SESSION, values);
-		
+		Uri newSessionUri = getContentResolver().insert(CONTENT_URI_SESSION,
+				values);
+
 		Intent intent = new Intent(this, Session.class);
 		intent.setData(newSessionUri);
 		startActivity(intent);
@@ -157,7 +241,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 		}
 		return false;
 	}
-	
+
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -170,11 +254,13 @@ public class Sessions extends ListActivity implements OnClickListener {
 		getContentResolver().delete(CONTENT_URI_SESSION, "_id=?",
 				new String[] { "" + id });
 		adjustButtonEnablement();
+		calculateTotals(monthTotals, weekTotals);
 	}
 
 	public class SessionListViewBinder implements
 			SimpleCursorAdapter.ViewBinder {
 		Calendar cal = Calendar.getInstance();
+
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 			if (columnIndex == 0 || columnIndex == 1) {
@@ -194,12 +280,21 @@ public class Sessions extends ListActivity implements OnClickListener {
 								&& month == cal.get(Calendar.MONTH)
 								&& day == cal.get(Calendar.DAY_OF_MONTH)) {
 							// same date - display only time
-							timeView.setText(DateFormat.getTimeFormat(Sessions.this).format(time));
+							timeView.setText(DateFormat.getTimeFormat(
+									Sessions.this).format(time));
 						} else {
-							timeView.setText(DateFormat.getDateFormat(Sessions.this).format(time) + " " + DateFormat.getTimeFormat(Sessions.this).format(time));
+							timeView.setText(DateFormat.getDateFormat(
+									Sessions.this).format(time)
+									+ " "
+									+ DateFormat.getTimeFormat(Sessions.this)
+											.format(time));
 						}
 					} else {
-						timeView.setText(DateFormat.getDateFormat(Sessions.this).format(time) + " " + DateFormat.getTimeFormat(Sessions.this).format(time));
+						timeView.setText(DateFormat
+								.getDateFormat(Sessions.this).format(time)
+								+ " "
+								+ DateFormat.getTimeFormat(Sessions.this)
+										.format(time));
 					}
 				}
 				return true;
@@ -225,18 +320,84 @@ public class Sessions extends ListActivity implements OnClickListener {
 				float workHours = getWorkHours(startTime, endTime);
 				hoursView.setText(hoursFormat.format(workHours) + "h");
 				return true;
+			} else if (columnIndex == 4) {
+				TextView monthTotalLabelView = (TextView) view;
+				long id = cursor.getLong(3);
+				long start = cursor.getLong(0);
+				if (monthTotals.containsKey(id)) {
+					Calendar cal = Calendar.getInstance();
+					cal.setTimeInMillis(start);
+					monthTotalLabelView
+							.setText(dateFormatSymbols.getMonths()[cal
+									.get(Calendar.MONTH)]
+									+ " total:");
+					monthTotalLabelView.setMaxHeight(1000);
+				} else {
+					monthTotalLabelView.setMaxHeight(0);
+				}
+				return true;
+			} else if (columnIndex == 5) {
+				TextView monthTotalView = (TextView) view;
+				long id = cursor.getLong(3);
+				Float total = monthTotals.get(id);
+				if (total != null) {
+					monthTotalView.setText(total + "h");
+					monthTotalView.setMaxHeight(1000);
+				} else {
+					monthTotalView.setMaxHeight(0);
+				}
+				return true;
+			} else if (columnIndex == 6) {
+				TextView weekTotalLabelView = (TextView) view;
+				long id = cursor.getLong(3);
+				long start = cursor.getLong(0);
+				if (weekTotals.containsKey(id)) {
+					Calendar cal = Calendar.getInstance();
+					cal.setTimeInMillis(start);
+					weekTotalLabelView.setText("Week "
+							+ cal.get(Calendar.WEEK_OF_YEAR) + " total:");
+					weekTotalLabelView.setMaxHeight(1000);
+				} else {
+					weekTotalLabelView.setMaxHeight(0);
+				}
+				return true;
+			} else if (columnIndex == 7) {
+				TextView weekTotalView = (TextView) view;
+				long id = cursor.getLong(3);
+				Float total = weekTotals.get(id);
+				if (total != null) {
+					weekTotalView.setText(total + "h");
+					weekTotalView.setMaxHeight(1000);
+				} else {
+					weekTotalView.setMaxHeight(0);
+				}
+				return true;
 			}
 
-			return false;
+			return true;
 		}
 	}
-	
+
+	private final SessionListViewBinder viewBinder = new SessionListViewBinder();
+
+	private void showSessions(Cursor cursor) {
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+				R.layout.session_list_item, cursor, FROM, TO);
+		adapter.setViewBinder(viewBinder);
+		setListAdapter(adapter);
+	}
+
+	private Cursor getSessions(long projectId) {
+		return managedQuery(CONTENT_URI_SESSION, FROM, "project_id=?",
+				new String[] { "" + projectId }, "start desc");
+	}
+
 	private float getWorkHours(long startTime, long endTime) {
 		long lunchMsExclusion = 0;
 		if (Settings.isExcludeLunchTime(this)) {
 			long lunchStart = Settings.getLunchStart(this);
 			long lunchEnd = Settings.getLunchEnd(this);
-			
+
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(startTime);
 			cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -244,9 +405,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 			cal.set(Calendar.SECOND, 0);
 			cal.set(Calendar.MILLISECOND, 0);
 			long dayStart = cal.getTimeInMillis();
-			Date dateStartDate = new Date(dayStart);
-			Date lunchStartDate =new Date(dayStart + lunchStart);
-			Date lunchEndDate =new Date(dayStart + lunchEnd);
 			while (true) {
 				long start = Math.max(startTime, dayStart + lunchStart);
 				long end = Math.min(endTime, dayStart + lunchEnd);
@@ -255,30 +413,17 @@ public class Sessions extends ListActivity implements OnClickListener {
 					break;
 				}
 				lunchMsExclusion += overlap;
-				dayStart += 24 * 3600 * 1000;	// to next day start
+				dayStart += 24 * 3600 * 1000; // to next day start
 			}
 		}
 		long msTime = endTime - startTime - lunchMsExclusion;
-		int roundedTime = (int)((float)msTime / precision / 3600000f + 0.5f);
+		int roundedTime = (int) ((float) msTime / precision / 3600000f + 0.5f);
 		float workHours = roundedTime * precision;
 		return workHours;
 	}
-	
-	private final SessionListViewBinder viewBinder = new SessionListViewBinder();
+
 	private View startButton;
 	private View stopButton;
-
-	private void showSessions(Cursor cursor) {
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.session_list_item, cursor, FROM, TO);
-		adapter.setViewBinder(viewBinder);
-		setListAdapter(adapter);
-	}
-	
-	private Cursor getSessions(long projectId) {
-		return managedQuery(CONTENT_URI_SESSION, FROM, "project_id=?",
-				new String[] { "" + projectId }, "start desc");
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -314,6 +459,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 							"_id=?", new String[] { "" + sessionId });
 					startButton.setEnabled(true);
 					stopButton.setEnabled(false);
+
+					calculateTotals(monthTotals, weekTotals);
 				}
 				break;
 			}
@@ -323,7 +470,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 			}
 		}
 	}
-	
+
 	/**
 	 * 
 	 */
