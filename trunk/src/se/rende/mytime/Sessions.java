@@ -341,7 +341,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				long id = cursor.getLong(3);
 				Float total = monthTotals.get(id);
 				if (total != null) {
-					monthTotalView.setText(total + "h");
+					monthTotalView.setText(hoursFormat.format(total) + "h");
 					monthTotalView.setMaxHeight(1000);
 				} else {
 					monthTotalView.setMaxHeight(0);
@@ -366,7 +366,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				long id = cursor.getLong(3);
 				Float total = weekTotals.get(id);
 				if (total != null) {
-					weekTotalView.setText(total + "h");
+					weekTotalView.setText(hoursFormat.format(total) + "h");
 					weekTotalView.setMaxHeight(1000);
 				} else {
 					weekTotalView.setMaxHeight(0);
