@@ -31,7 +31,7 @@
 	<string name="precision_setting_summary">Round work hours to multiple of</string>
 	<string name="lunch_start_label">Lunch from</string>
 	<string name="lunch_start_summary">Lunch starts at</string>
-	<string name="lunch_end_label">Lunch from</string>
+	<string name="lunch_end_label">Lunch to</string>
 	<string name="lunch_end_summary">Lunch ends at</string>
 	<string name="add_session">Add Session</string>
 	<string name="about_version">Version</string>
@@ -41,4 +41,6 @@
 	<string name="pref_exclude_lunch_time_key">exclude_lunch_time</string>
 	<string name="pref_lunch_start_key">lunch_start</string>
 	<string name="pref_lunch_end_key">lunch_end</string>
+	<string name="total_label">total</string>
+	<string name="hour_abbrev">h</string>
 </resources>
