@@ -382,7 +382,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 
 	private void showSessions(Cursor cursor) {
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.session_list_item, cursor, FROM, TO);
+				R.layout.sessions_list_item, cursor, FROM, TO);
 		adapter.setViewBinder(viewBinder);
 		setListAdapter(adapter);
 	}

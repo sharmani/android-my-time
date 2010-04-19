@@ -139,12 +139,16 @@ public class Settings extends PreferenceActivity {
 	 *         hours as 0, 0.25, 0.5, 0.75 etc)
 	 */
 	public static float getPrecision(Context context) {
-		String prefString = PreferenceManager.getDefaultSharedPreferences(
+		String precisionString = PreferenceManager.getDefaultSharedPreferences(
 				context).getString("precision", "0.1");
 		try {
-			return Float.parseFloat(prefString);
+			return Float.parseFloat(precisionString);
 		} catch (NumberFormatException e) {
-			return 0.1f;
+			try {
+				return Float.parseFloat(precisionString.replace(',', '.'));
+			} catch (NumberFormatException e1) {
+				return 0.1f;
+			}
 		}
 	}
 
