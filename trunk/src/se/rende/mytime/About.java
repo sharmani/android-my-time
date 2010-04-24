@@ -40,7 +40,7 @@ public class About extends Activity {
 		setContentView(R.layout.about);
 
 		TextView versionTextView = (TextView) findViewById(R.id.about_version);
-		String rev = "$Revision$";
+		String rev = "$Revision$"; 
 		try {
 			PackageInfo packageInfo = getPackageManager().getPackageInfo(
 					getPackageName(), 0);
