@@ -371,7 +371,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 					endTime = System.currentTimeMillis();
 				}
 				float workHours = getWorkHours(startTime, endTime);
-				hoursView.setText(hoursFormat.format(workHours) + R.string.h);
+				hoursView.setText(hoursFormat.format(workHours) + getString(R.string.h));
 				return true;
 			} else if (columnIndex == 4) {
 				TextView monthTotalLabelView = (TextView) view;
@@ -394,7 +394,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				long id = cursor.getLong(3);
 				Float total = monthTotals.get(id);
 				if (total != null) {
-					monthTotalView.setText(hoursFormat.format(total) + R.string.h);
+					monthTotalView.setText(hoursFormat.format(total) + getString(R.string.h));
 					monthTotalView.setMaxHeight(1000);
 				} else {
 					monthTotalView.setMaxHeight(0);
@@ -419,7 +419,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				long id = cursor.getLong(3);
 				Float total = weekTotals.get(id);
 				if (total != null) {
-					weekTotalView.setText(hoursFormat.format(total) + R.string.h);
+					weekTotalView.setText(hoursFormat.format(total) + getString(R.string.h));
 					weekTotalView.setMaxHeight(1000);
 				} else {
 					weekTotalView.setMaxHeight(0);
