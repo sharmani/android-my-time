@@ -19,11 +19,14 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.TreeMap;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -73,7 +76,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 		setContentView(R.layout.sessions);
 
 		TextView projectNameView = (TextView) findViewById(R.id.sessionsProjectName);
-		projectNameView.setText(getProjectName());
+		projectName = getProjectName();
+		projectNameView.setText(projectName);
 
 		getListView().setOnCreateContextMenuListener(this);
 		startButton = findViewById(R.id.StartButton);
@@ -200,8 +204,57 @@ public class Sessions extends ListActivity implements OnClickListener {
 		case R.id.addSession:
 			addSession();
 			return true;
+		case R.id.shareSession:
+			shareSession();
+			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 
+	 */
+	private void shareSession() {
+		try {
+			Intent i=new Intent(android.content.Intent.ACTION_SEND);
+			i.setType("text/plain");
+			i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.time_report) + " " + projectName + " " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()));
+//			i.setType("message/rfc882");
+			i.putExtra(Intent.EXTRA_TEXT, getSessionReport());
+			startActivity(Intent.createChooser(i, getString(R.string.share_title)));
+		} catch (Exception e) {
+			new AlertDialog.Builder(this)
+		      .setMessage("backup error " + e)
+		      .show();
+		}
+	}
+
+	private String getSessionReport() {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		Cursor sessionCursor = null;
+		try {
+			sessionCursor = getContentResolver().query(CONTENT_URI_SESSION,
+					new String[] { "_id", "start", "end", "comment" }, "project_id=? and end is not null", new String[] {"" + currentProjectId},	"start asc");
+			while (sessionCursor.moveToNext()) {
+			    long startTime = sessionCursor.getLong(1);
+			    long endTime = sessionCursor.getLong(2);
+			    String comment = sessionCursor.getString(3);
+			    pw.print(DateFormat.getDateFormat(this).format(startTime) + 
+			    		" " + DateFormat.getTimeFormat(this).format(startTime) + 
+			    		" " + getWorkHours(startTime, endTime) + getString(R.string.h));
+			    if (comment != null) {
+			    	pw.print(" " + comment);
+				}
+			    pw.println();
+			}
+		} finally {
+			if (sessionCursor != null) {
+				sessionCursor.close();
+			}
+		}
+		pw.close();
+		return sw.toString();
 	}
 
 	/**
@@ -318,7 +371,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 					endTime = System.currentTimeMillis();
 				}
 				float workHours = getWorkHours(startTime, endTime);
-				hoursView.setText(hoursFormat.format(workHours) + "h");
+				hoursView.setText(hoursFormat.format(workHours) + R.string.h);
 				return true;
 			} else if (columnIndex == 4) {
 				TextView monthTotalLabelView = (TextView) view;
@@ -341,7 +394,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				long id = cursor.getLong(3);
 				Float total = monthTotals.get(id);
 				if (total != null) {
-					monthTotalView.setText(hoursFormat.format(total) + "h");
+					monthTotalView.setText(hoursFormat.format(total) + R.string.h);
 					monthTotalView.setMaxHeight(1000);
 				} else {
 					monthTotalView.setMaxHeight(0);
@@ -366,7 +419,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				long id = cursor.getLong(3);
 				Float total = weekTotals.get(id);
 				if (total != null) {
-					weekTotalView.setText(hoursFormat.format(total) + "h");
+					weekTotalView.setText(hoursFormat.format(total) + R.string.h);
 					weekTotalView.setMaxHeight(1000);
 				} else {
 					weekTotalView.setMaxHeight(0);
@@ -424,6 +477,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 
 	private View startButton;
 	private View stopButton;
+	private String projectName;
 
 	@Override
 	public void onClick(View v) {
