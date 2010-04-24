@@ -4,4 +4,5 @@
 		android:icon="@drawable/ic_menu_add"></item>
 	
 	
+<item android:id="@+id/shareSession" android:title="@string/share_menu_item" android:icon="@android:drawable/ic_menu_share"></item>
 </menu>

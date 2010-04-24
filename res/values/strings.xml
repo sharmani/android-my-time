@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="h">h</string>
+    <string name="time_report">Time report</string>
 	<string name="no_projects">No Projects - Use Add Project menu</string>
 	<string name="no_sessions">No Sessions</string>
 	<string name="hello">My Time</string>
@@ -43,4 +45,9 @@
 	<string name="pref_lunch_end_key">lunch_end</string>
 	<string name="total_label">total</string>
 	<string name="hour_abbrev">h</string>
+	<string name="share_subject">My Time Report</string>
+<string name="share_title">Share Time Report</string>
+<string name="backup_title">Backup all time reports</string>
+<string name="backup_menu_item">Backup</string>
+<string name="share_menu_item">Share</string>
 </resources>

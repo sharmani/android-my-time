@@ -18,6 +18,10 @@ package se.rende.mytime;
 
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
+
+import java.io.IOException;
+import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentUris;
@@ -25,9 +29,11 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -110,6 +116,9 @@ public class MyTime extends ListActivity {
 		case R.id.addProj:
 			addProject();
 			return true;
+		case R.id.shareMenuItem:
+			shareBackup();
+			return true;
 		case R.id.settings_menu:
 			startActivity(new Intent(this, Settings.class));
 			return true;
@@ -118,6 +127,22 @@ public class MyTime extends ListActivity {
 			return true;
 		}
 		return false;
+	}
+
+	private void shareBackup() {
+		try {
+			Intent i=new Intent(android.content.Intent.ACTION_SEND);
+			i.setType("text/xml");
+			i.putExtra(Intent.EXTRA_SUBJECT, "My Time backup " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()));
+			i.setType("message/rfc882");
+			BackupFormatter backupFormatter = new BackupFormatter(getContentResolver());
+			i.putExtra(Intent.EXTRA_TEXT, backupFormatter.getXml());
+			startActivity(Intent.createChooser(i, getString(R.string.backup_title)));
+		} catch (Exception e) {
+			new AlertDialog.Builder(this)
+		      .setMessage("backup error " + e)
+		      .show();
+		}
 	}
 
 	private final ProjectListViewBinder viewBinder = new ProjectListViewBinder();
