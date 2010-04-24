@@ -5,25 +5,23 @@
   android:layout_height="wrap_content">
 	<TextView android:id="@+id/month_total_label"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="December total" android:paddingLeft="2dip"
-		android:background="#80ff8020" />
+		android:text="December total" android:background="#80ff8020" android:paddingLeft="5dip"/>
 	<TextView android:layout_toRightOf="@+id/month_total_label"
 		android:layout_width="fill_parent" android:id="@+id/month_total"
 		android:layout_height="wrap_content" android:gravity="right"
-		android:text="162h" android:paddingRight="2dip" android:background="#80ff8020" />
+		android:text="162h" android:background="#80ff8020" android:paddingRight="8dip"/>
 	<TextView android:id="@+id/week_total_label"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
-		android:text="Week 45 total" android:paddingLeft="2dip"
-		android:layout_below="@+id/month_total" android:background="#80fff020" />
+		android:text="Week 45 total" android:layout_below="@+id/month_total" android:background="#80fff020" android:paddingLeft="5dip"/>
 	<TextView android:layout_toRightOf="@+id/week_total_label"
 		android:layout_width="fill_parent" android:id="@+id/week_total"
 		android:layout_height="wrap_content" android:gravity="right"
-		android:text="35h" android:paddingRight="2dip" android:layout_below="@+id/month_total"
-		android:background="#80fff020" />
+		android:text="35h" android:layout_below="@+id/month_total"
+		android:background="#80fff020" android:paddingRight="8dip"/>
 	<TextView android:id="@+id/start_date_time"
 		android:layout_width="wrap_content" android:layout_height="wrap_content"
 		android:text="10-02-25 10:13" android:layout_below="@+id/week_total"
-		android:paddingTop="5dip" android:paddingLeft="2dip" />
+		android:paddingTop="5dip" android:paddingLeft="5dip"/>
 	<TextView android:id="@+id/spacing" android:layout_width="wrap_content"
 		android:layout_height="wrap_content" android:layout_below="@+id/week_total"
 		android:layout_toRightOf="@+id/start_date_time" android:text=" - "
@@ -35,9 +33,8 @@
 	<TextView android:layout_toRightOf="@+id/end_date_time"
 		android:layout_below="@+id/week_total" android:layout_width="fill_parent"
 		android:id="@+id/hours" android:layout_height="wrap_content"
-		android:gravity="right" android:text="3.5h" android:paddingTop="5dip"
-		android:paddingRight="2dip" />
+		android:gravity="right" android:text="3.5h" android:paddingTop="5dip" android:paddingRight="8dip"/>
 	<TextView android:id="@+id/comment" android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:layout_below="@+id/start_date_time"
-		android:text="changed idl" android:paddingLeft="2dip" />
+		android:text="changed idl" android:paddingRight="8dip" android:paddingLeft="5dip"/>
 </RelativeLayout>
