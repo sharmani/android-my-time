@@ -20,6 +20,7 @@ import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -45,16 +46,13 @@ public class BackupFormatter {
 	}
 	
 	/**
-	 * @return 
-	 * @throws IOException 
-	 * @throws IllegalStateException 
-	 * @throws IllegalArgumentException 
-	 * 
+	 * Writes backup as xml in UTF-8 encoding to the output stream.
+	 * @param os where xml is written
+	 * @throws IOException
 	 */
-	public String getXml() throws IllegalArgumentException, IllegalStateException, IOException {
-	    XmlSerializer serializer = Xml.newSerializer();
-	    StringWriter writer = new StringWriter();
-        serializer.setOutput(writer);
+	public void writeXml(OutputStream os) throws IOException {
+		XmlSerializer serializer = Xml.newSerializer();
+        serializer.setOutput(os, "UTF-8");
         serializer.startDocument("UTF-8", true);
         serializer.text("\n");
         serializer.startTag("", "my-time-backup");
@@ -109,8 +107,6 @@ public class BackupFormatter {
 				cursor.close();
 			}
 		}
-        return writer.toString();
-
 	}
 
 	/**

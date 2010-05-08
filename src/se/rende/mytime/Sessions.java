@@ -19,6 +19,11 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.DateFormatSymbols;
@@ -34,6 +39,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -216,11 +222,16 @@ public class Sessions extends ListActivity implements OnClickListener {
 	 */
 	private void shareSession() {
 		try {
+			String fileName = getString(R.string.time_report) + " " + projectName + " " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()).replace('/', '-');
+			File reportFile = new File(Environment.getExternalStorageDirectory(), fileName + ".html");
+			FileOutputStream os = new FileOutputStream(reportFile);
+			writeHtmlReport(os);
+			os.close();
+
 			Intent i=new Intent(android.content.Intent.ACTION_SEND);
-			i.setType("text/plain");
-			i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.time_report) + " " + projectName + " " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()));
-//			i.setType("message/rfc882");
-			i.putExtra(Intent.EXTRA_TEXT, getSessionReport());
+			i.putExtra(Intent.EXTRA_SUBJECT, fileName);
+			i.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + reportFile));
+			i.setType("text/html");
 			startActivity(Intent.createChooser(i, getString(R.string.share_title)));
 		} catch (Exception e) {
 			new AlertDialog.Builder(this)
@@ -229,32 +240,81 @@ public class Sessions extends ListActivity implements OnClickListener {
 		}
 	}
 
-	private String getSessionReport() {
-		StringWriter sw = new StringWriter();
+	/**
+	 * Writes time report as html in UTF-8 encoding to the output stream.
+	 * @param os where xml is written
+	 * @throws IOException
+	 */
+	public void writeHtmlReport(OutputStream os) throws IOException {
+		OutputStreamWriter sw = new OutputStreamWriter(os, "UTF-8");
 		PrintWriter pw = new PrintWriter(sw);
 		Cursor sessionCursor = null;
 		try {
 			sessionCursor = getContentResolver().query(CONTENT_URI_SESSION,
-					new String[] { "_id", "start", "end", "comment" }, "project_id=? and end is not null", new String[] {"" + currentProjectId},	"start asc");
+					new String[] { "_id", "start", "end", "comment" }, 
+					"project_id=? and end is not null", new String[] {"" + currentProjectId}, "start asc");
+			String lastDate = null;
+			long lastId = -1;
+			float daySum = 0f;
+			StringBuilder comments = new StringBuilder();
+			pw.println("<html><body><table>");
+			pw.println("<tr><td>date</td><td>day</td><td>comment</td><td>week</td><td>month</td></tr>");
 			while (sessionCursor.moveToNext()) {
-			    long startTime = sessionCursor.getLong(1);
-			    long endTime = sessionCursor.getLong(2);
-			    String comment = sessionCursor.getString(3);
-			    pw.print(DateFormat.getDateFormat(this).format(startTime) + 
-			    		" " + DateFormat.getTimeFormat(this).format(startTime) + 
-			    		" " + getWorkHours(startTime, endTime) + getString(R.string.h));
-			    if (comment != null) {
-			    	pw.print(" " + comment);
-				}
-			    pw.println();
+				long id = sessionCursor.getLong(0);
+				long startTime = sessionCursor.getLong(1);
+				long endTime = sessionCursor.getLong(2);
+				String comment = sessionCursor.getString(3);
+				
+				String dateString = DateFormat.getDateFormat(this).format(startTime);
+				if (lastDate == null) {
+					lastDate = dateString;
+				} else if (!lastDate.equals(dateString)) {
+			    	printDateLine(pw, comments.toString(), lastDate, daySum, lastId);
+					lastDate = dateString;
+					daySum = 0f;
+					comments.setLength(0);
+			    }
+			    daySum += getWorkHours(startTime, endTime);
+		    	if (comment != null && comment.length() > 0) {
+		    		if (comments.length() > 0 && comment.length() > 0) {
+		    			comments.append(", ");
+		    		}
+		    		comments.append(comment);
+		    	}
+		    	lastId = id;
 			}
+			if (lastId != -1) {
+		    	printDateLine(pw, comments.toString(), lastDate, daySum, lastId);
+			}
+			pw.println("</table></body></html>");
 		} finally {
 			if (sessionCursor != null) {
 				sessionCursor.close();
 			}
 		}
-		pw.close();
-		return sw.toString();
+		pw.flush();
+	}
+
+	private void printDateLine(PrintWriter pw, String comments, String dateString, float workHours, long lastId) {
+		pw.print("<tr><td>" + dateString + "</td><td>" + hoursFormat.format(workHours) + "</td><td>");
+		if (comments.length() > 0) {
+			pw.print(comments);
+		}
+		pw.print("</td>");
+		
+		Float weekTotal = weekTotals.get(lastId);
+		pw.print("<td>");
+		if (weekTotal != null) {
+			pw.print(hoursFormat.format(weekTotal));
+		}
+		pw.print("</td>");
+		
+		Float monthTotal = monthTotals.get(lastId);
+		pw.print("<td>");
+		if (monthTotal != null) {
+			pw.print(hoursFormat.format(monthTotal));
+		}
+		pw.println("</td>");
 	}
 
 	/**
