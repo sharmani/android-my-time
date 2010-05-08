@@ -19,8 +19,9 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -29,10 +30,10 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
-import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -131,12 +132,18 @@ public class MyTime extends ListActivity {
 
 	private void shareBackup() {
 		try {
-			Intent i=new Intent(android.content.Intent.ACTION_SEND);
-			i.setType("text/xml");
-			i.putExtra(Intent.EXTRA_SUBJECT, "My Time backup " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()));
-			i.setType("message/rfc882");
 			BackupFormatter backupFormatter = new BackupFormatter(getContentResolver());
-			i.putExtra(Intent.EXTRA_TEXT, backupFormatter.getXml());
+			String fileName = "My Time backup " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()).replace('/', '-');
+			File backupFile = new File(Environment.getExternalStorageDirectory(), fileName + ".xml");
+			FileOutputStream os = new FileOutputStream(backupFile);
+			backupFormatter.writeXml(os);
+			os.close();
+
+			Intent i=new Intent(android.content.Intent.ACTION_SEND);
+			i.putExtra(Intent.EXTRA_SUBJECT, fileName);
+			i.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + backupFile));
+			i.setType("text/xml"); 
+			
 			startActivity(Intent.createChooser(i, getString(R.string.backup_title)));
 		} catch (Exception e) {
 			new AlertDialog.Builder(this)

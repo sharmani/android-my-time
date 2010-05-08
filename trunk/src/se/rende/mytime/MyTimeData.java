@@ -56,7 +56,7 @@ public class MyTimeData extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (oldVersion != newVersion) {
 			for (int i = oldVersion; i < newVersion; i++) {
-				switch (oldVersion) {
+				switch (i) {
 				case 1:
 					// no changes
 					break;

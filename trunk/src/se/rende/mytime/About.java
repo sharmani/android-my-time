@@ -17,6 +17,7 @@
 package se.rende.mytime;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -47,8 +48,9 @@ public class About extends Activity {
 			versionTextView.setText(getString(R.string.about_version) + " "
 					+ packageInfo.versionName + "." + rev.split(" ")[1]);
 		} catch (NameNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new AlertDialog.Builder(this)
+		      .setMessage("error: " + e)
+		      .show();
 		}
 
 		TextView srcLinkTextView = (TextView) findViewById(R.id.about_src_link);
