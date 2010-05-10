@@ -19,21 +19,21 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -86,13 +86,13 @@ public class MyTime extends ListActivity {
 		adapter.setViewBinder(viewBinder);
 		setListAdapter(adapter);
 	}
-
+		
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.projmenu, menu);
-		return true;
+		inflater.inflate(R.menu.projmenu, menu);        
+        return true;
 	}
 	
 	@Override
@@ -108,10 +108,7 @@ public class MyTime extends ListActivity {
 		case R.id.about:
 			startActivity(new Intent(this, About.class));
 			return true;
-		case R.id.menu_item_export:
-			exportDatabase();
-			return true;
-		}
+		}	
 		return false;
 	}
 
@@ -146,28 +143,6 @@ public class MyTime extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		runningProjectId = getRunningProjectId();
-	}
-
-	private void exportDatabase() {
-		try {
-			BackupFormatter backupFormatter = new BackupFormatter(getContentResolver());
-			String fileName = "My Time export " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()).replace('/', '-');
-			File backupFile = new File(Environment.getExternalStorageDirectory(), fileName + ".xml");
-			FileOutputStream os = new FileOutputStream(backupFile);
-			backupFormatter.writeXml(os);
-			os.close();
-
-			Intent i = new Intent(android.content.Intent.ACTION_SEND);
-			i.putExtra(Intent.EXTRA_SUBJECT, fileName);
-			i.setType("text/xml");
-			i.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + backupFile));
-			
-			startActivity(Intent.createChooser(i, getString(R.string.export_title)));
-		} catch (Exception e) {
-			new AlertDialog.Builder(this)
-		      .setMessage("backup error " + e)
-		      .show();
-		}
 	}
 
 	public class ProjectListViewBinder implements
