@@ -32,7 +32,7 @@ import android.database.Cursor;
 import android.util.Xml;
 
 /**
- *
+ * Formats the backup text to a stream.
  * @author Dag Rende
  */
 public class BackupFormatter {
