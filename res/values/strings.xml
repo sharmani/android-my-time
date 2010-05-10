@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="h">h</string>
-    <string name="time_report">Time report</string>
+	<string name="h">h</string>
+	<string name="time_report">Time report</string>
 	<string name="no_projects">No Projects - Use Add Project menu</string>
 	<string name="no_sessions">No Sessions</string>
 	<string name="hello">My Time</string>
@@ -46,12 +46,12 @@
 	<string name="total_label">total</string>
 	<string name="hour_abbrev">h</string>
 	<string name="share_subject">My Time Report</string>
-<string name="share_title">Share Time Report</string>
-<string name="export_title">Export all time reports</string>
-<string name="export_menu_item">Export</string>
-<string name="share_menu_item">Share</string>
-<string name="projects_menu_other">Other</string>
-<string name="projects_menu_export">Export</string>
-<string name="activity_name_import">My time Import</string>
+	<string name="share_title">Share Time Report</string>
+	<string name="export_title">Export all time reports</string>
+	<string name="export_menu_item">Export</string>
+	<string name="share_menu_item">Share</string>
+	<string name="projects_menu_other">Other</string>
+	<string name="projects_menu_export">Export</string>
+	<string name="activity_name_import">My time Import</string>
 
 </resources>
