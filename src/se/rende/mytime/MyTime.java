@@ -21,7 +21,6 @@ import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
@@ -48,9 +47,8 @@ import android.widget.TextView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 /**
- * Timesheet application for android. Add a number of projects, and then
- * start/stop session timer on a project and get list of sessions with week and
- * month sums.
+ * Timesheet application for android. 
+ * Project list. Click a project top open it in Sessions activity.
  * 
  * @author Dag Rende April 1, 2010
  */
@@ -58,6 +56,7 @@ public class MyTime extends ListActivity {
 	private static final String[] FROM = { "name", "_id" };
 	private static final int[] TO = { R.id.name, R.id.run_indicator };
 	private long runningProjectId = 0;
+	private final ProjectListViewBinder viewBinder = new ProjectListViewBinder();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,17 +67,66 @@ public class MyTime extends ListActivity {
 		showProjects(getProjects());
 	}
 	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onResume()
+	/**
+	 * Returns a cursor to the projects in alphabetical order.
+	 * @return the project cirsor
 	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		runningProjectId = getRunningProjectId();
+	private Cursor getProjects() {
+		return managedQuery(CONTENT_URI_PROJECT, FROM, null, null, "name asc");
 	}
 
 	/**
-	 * @return
+	 * Shows the projects by adapting the provided cursor to the list of this activity. 
+	 * It also makes the running project line marked using a view binder.
+	 * @param cursor
+	 */
+	private void showProjects(Cursor cursor) {
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+				R.layout.project_list_item, cursor, FROM, TO);
+		adapter.setViewBinder(viewBinder);
+		setListAdapter(adapter);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.onCreateOptionsMenu(menu);
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.projmenu, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		super.onOptionsItemSelected(item);
+		switch (item.getItemId()) {
+		case R.id.addProj:
+			addProject();
+			return true;
+		case R.id.settings_menu:
+			startActivity(new Intent(this, Settings.class));
+			return true;
+		case R.id.about:
+			startActivity(new Intent(this, About.class));
+			return true;
+		case R.id.menu_item_export:
+			exportDatabase();
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Intent intent = new Intent(this, Sessions.class);
+		intent.setData(ContentUris.withAppendedId(CONTENT_URI_PROJECT, id));
+		startActivity(intent);
+	}
+	
+	/**
+	 * Returns the id of the project that has a sesions that is running (has null end time).
+	 * 
+	 * @return if of running project or 0 if none.
 	 */
 	private long getRunningProjectId() {
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
@@ -95,64 +143,32 @@ public class MyTime extends ListActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.projmenu, menu);
-		return true;
+	protected void onResume() {
+		super.onResume();
+		runningProjectId = getRunningProjectId();
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		Intent intent = new Intent(this, Sessions.class);
-		intent.setData(ContentUris.withAppendedId(CONTENT_URI_PROJECT, id));
-		startActivity(intent);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		switch (item.getItemId()) {
-		case R.id.addProj:
-			addProject();
-			return true;
-		case R.id.shareMenuItem:
-			shareBackup();
-			return true;
-		case R.id.settings_menu:
-			startActivity(new Intent(this, Settings.class));
-			return true;
-		case R.id.about:
-			startActivity(new Intent(this, About.class));
-			return true;
-		}
-		return false;
-	}
-
-	private void shareBackup() {
+	private void exportDatabase() {
 		try {
 			BackupFormatter backupFormatter = new BackupFormatter(getContentResolver());
-			String fileName = "My Time backup " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()).replace('/', '-');
+			String fileName = "My Time export " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()).replace('/', '-');
 			File backupFile = new File(Environment.getExternalStorageDirectory(), fileName + ".xml");
 			FileOutputStream os = new FileOutputStream(backupFile);
 			backupFormatter.writeXml(os);
 			os.close();
 
-			Intent i=new Intent(android.content.Intent.ACTION_SEND);
+			Intent i = new Intent(android.content.Intent.ACTION_SEND);
 			i.putExtra(Intent.EXTRA_SUBJECT, fileName);
+			i.setType("text/xml");
 			i.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + backupFile));
-			i.setType("text/xml"); 
 			
-			startActivity(Intent.createChooser(i, getString(R.string.backup_title)));
+			startActivity(Intent.createChooser(i, getString(R.string.export_title)));
 		} catch (Exception e) {
 			new AlertDialog.Builder(this)
 		      .setMessage("backup error " + e)
 		      .show();
 		}
 	}
-
-	private final ProjectListViewBinder viewBinder = new ProjectListViewBinder();
 
 	public class ProjectListViewBinder implements
 			SimpleCursorAdapter.ViewBinder {
@@ -249,17 +265,6 @@ public class MyTime extends ListActivity {
 		} finally {
 			cursor.close();
 		}
-	}
-
-	private Cursor getProjects() {
-		return managedQuery(CONTENT_URI_PROJECT, FROM, null, null, "name asc");
-	}
-
-	private void showProjects(Cursor cursor) {
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.project_list_item, cursor, FROM, TO);
-		adapter.setViewBinder(viewBinder);
-		setListAdapter(adapter);
 	}
 
 	private void addProject(String projName) {

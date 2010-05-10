@@ -47,7 +47,11 @@
 	<string name="hour_abbrev">h</string>
 	<string name="share_subject">My Time Report</string>
 <string name="share_title">Share Time Report</string>
-<string name="backup_title">Backup all time reports</string>
-<string name="backup_menu_item">Backup</string>
+<string name="export_title">Export all time reports</string>
+<string name="export_menu_item">Export</string>
 <string name="share_menu_item">Share</string>
+<string name="projects_menu_other">Other</string>
+<string name="projects_menu_export">Export</string>
+<string name="activity_name_import">My time Import</string>
+
 </resources>

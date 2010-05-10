@@ -5,5 +5,8 @@
 	<item android:title="@string/settings_menu_label" android:id="@+id/settings_menu" android:icon="@drawable/ic_menu_preferences"></item>
 	<item android:id="@+id/about" android:title="@string/about_menu"
 		android:icon="@drawable/ic_menu_info_details"></item>
-<item android:visible="true" android:id="@+id/shareMenuItem" android:enabled="true" android:title="@string/backup_menu_item"></item>
+
+<item android:title="@string/projects_menu_other"><menu><item android:title="@string/projects_menu_export" android:id="@+id/menu_item_export"></item>
+</menu>
+</item>
 </menu>
