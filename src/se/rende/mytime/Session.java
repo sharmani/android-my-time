@@ -19,6 +19,7 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -44,6 +45,10 @@ import android.widget.TimePicker;
  * @author Dag Rende
  */
 public class Session extends Activity implements OnClickListener {
+	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
+	"yy-MM-dd");
+	private static final SimpleDateFormat timeFormat = new SimpleDateFormat(
+	"HH:mm");
 	private long currentSessionId;
 	private EditText commentView;
 	private boolean isRunning;
@@ -79,17 +84,13 @@ public class Session extends Activity implements OnClickListener {
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "start", "end", "comment", "project_id" }, "_id=?",
 				new String[] { "" + currentSessionId }, null);
-		try {
-			if (cursor.moveToNext()) {
-				// found a session in progress
-				startDateTime = cursor.getLong(0);
-				endDateTime = cursor.getLong(1);
-				comment = cursor.getString(2);
-				currentProjectId = cursor.getLong(3);
-				projectName = getProjectName(currentProjectId);
-			}
-		} finally {
-			cursor.close();
+		if (cursor.moveToNext()) {
+			// found a session in progress
+			startDateTime = cursor.getLong(0);
+			endDateTime = cursor.getLong(1);
+			comment = cursor.getString(2);
+			currentProjectId = cursor.getLong(3);
+			projectName = getProjectName(currentProjectId);
 		}
 		showSession();
 		
@@ -98,14 +99,10 @@ public class Session extends Activity implements OnClickListener {
 	private String getProjectName(long projectId) {
 		Cursor projectCursor = getContentResolver().query(CONTENT_URI_PROJECT,
 				new String[] { "name" }, "_id=" + projectId, null, null);
-		try {
-			if (projectCursor.moveToNext()) {
-				return projectCursor.getString(0);
-			}
-			return "";
-		} finally {
-			projectCursor.close();
+		if (projectCursor.moveToNext()) {
+			return projectCursor.getString(0);
 		}
+		return "";
 	}
 
 	private void showSession() {

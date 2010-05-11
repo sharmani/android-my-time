@@ -9,14 +9,14 @@
 		android:layout_height="wrap_content" android:text="Minimalistic timesheet application."
 		android:gravity="center" android:paddingBottom="10dip" android:textColor="#000000"/>
 	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="Version 1.1."
-		android:gravity="center" android:textColor="#000000" android:paddingBottom="20dip" android:id="@+id/about_version"/>
-	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="Copyright (c) 2010 Dag Rende"
 		android:gravity="center" android:textColor="#000000"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="Apache License, Version 2.0"
 		android:gravity="center" android:textColor="#000000" android:paddingBottom="20dip"/>
+	<TextView android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="Version 1.1."
+		android:gravity="center" android:textColor="#000000" android:paddingBottom="20dip" android:id="@+id/about_version"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="Source code at:"
 		android:gravity="center" android:textColor="#000000" android:textSize="12sp"/>
