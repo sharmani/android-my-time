@@ -19,7 +19,6 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -45,10 +44,6 @@ import android.widget.TimePicker;
  * @author Dag Rende
  */
 public class Session extends Activity implements OnClickListener {
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat(
-	"yy-MM-dd");
-	private static final SimpleDateFormat timeFormat = new SimpleDateFormat(
-	"HH:mm");
 	private long currentSessionId;
 	private EditText commentView;
 	private boolean isRunning;
