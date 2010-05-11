@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.TimePicker;
 
@@ -15,12 +14,6 @@ import android.widget.TimePicker;
  */
 public class TimePickerPreference extends DialogPreference implements
 		TimePicker.OnTimeChangedListener {
-
-	private static final String TAG = "TimePickerPreference";
-	/**
-	 * set to true for debugging
-	 */
-	private static final boolean D = true;
 
 	/**
 	 * The validation expression for this preference

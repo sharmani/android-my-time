@@ -17,7 +17,6 @@
 package se.rende.mytime;
 
 import java.text.NumberFormat;
-import java.util.Date;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -26,8 +25,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.text.format.DateFormat;
-import android.util.TimeFormatException;
 
 /**
  * General application settings.
