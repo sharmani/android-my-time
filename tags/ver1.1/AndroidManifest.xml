@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="se.rende.mytime" android:versionName="1.1" android:versionCode="2">
+	<application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="false">
+		<activity android:name=".MyTime" android:label="@string/app_name"
+			android:theme="@android:style/Theme.Light">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<activity android:name=".Sessions" android:label="@string/sessions_label"
+			android:theme="@android:style/Theme.Light">
+		</activity>
+		<activity android:name=".Session" android:label="@string/session_label"
+			android:theme="@android:style/Theme.Light">
+		</activity>
+		<activity android:name=".About" android:label="@string/about_menu"
+			android:theme="@android:style/Theme.Dialog">
+		</activity>
+		<activity android:name=".Settings" android:label="@string/settings_menu_label"
+			android:theme="@android:style/Theme.Light">
+		</activity>
+		<provider android:name="MyTimeContentProvider"
+			android:authorities="se.rende.mytime" />
+	</application>
+	<uses-sdk android:minSdkVersion="4" />
+</manifest> 
