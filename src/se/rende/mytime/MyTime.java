@@ -30,6 +30,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.DialogInterface.OnClickListener;
+import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
@@ -38,6 +39,7 @@ import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.EditText;
@@ -48,7 +50,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 
 /**
  * Timesheet application for android. 
- * Project list. Click a project top open it in Sessions activity.
+ * Project list. Click a project to open it in Sessions activity.
  * 
  * @author Dag Rende April 1, 2010
  */
@@ -57,6 +59,7 @@ public class MyTime extends ListActivity {
 	private static final int[] TO = { R.id.name, R.id.run_indicator };
 	private long runningProjectId = 0;
 	private final ProjectListViewBinder viewBinder = new ProjectListViewBinder();
+	List<ResolveInfo> plugIns = new ArrayList<ResolveInfo>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,7 @@ public class MyTime extends ListActivity {
 		getListView().setOnCreateContextMenuListener(this);
 		runningProjectId = getRunningProjectId();
 		showProjects(getProjects());
+        scanPlugIns();
 	}
 	
 	/**
@@ -87,12 +91,37 @@ public class MyTime extends ListActivity {
 		setListAdapter(adapter);
 	}
 		
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.projmenu, menu);        
+		inflater.inflate(R.menu.projmenu, menu);    
+		
+		// add a menu for each plug-in
+        SubMenu subMenu = null;
+        for (ResolveInfo info : plugIns) {
+        	if (subMenu == null) {
+        		subMenu = menu.addSubMenu(getString(R.string.projects_menu_other));
+        	}
+			Intent launch = new Intent(Intent.ACTION_MAIN);
+			launch.addCategory(Intent.CATEGORY_LAUNCHER);
+			ActivityInfo activityInfo = info.activityInfo;
+			launch.setComponent(new ComponentName(activityInfo.applicationInfo.packageName, activityInfo.name));
+			CharSequence title = info.loadLabel(getPackageManager());
+			String appName = getString(R.string.app_name);
+			if (title.toString().startsWith(appName)) {
+				title = title.toString().substring(appName.length()).trim();
+			}
+			subMenu.add(Menu.NONE, plugIns.size(), Menu.NONE, title).setIntent(launch);
+		}
         return true;
+	}
+
+	private void scanPlugIns() {
+		Intent intent = new Intent("android.intent.action.MAIN");
+        intent.addCategory("se.rende.mytime.PLUGIN");
+        plugIns = getPackageManager().queryIntentActivities(intent, 0);
 	}
 	
 	@Override
