@@ -19,26 +19,19 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.TreeMap;
 
-import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.format.DateFormat;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -66,7 +59,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 			R.id.comment, R.id.hours, R.id.month_total_label, R.id.month_total,
 			R.id.week_total_label, R.id.week_total };
 	private long currentProjectId = 1;
-	private float precision = 0.25f;
 	private TreeMap<Long, Float> monthTotals = new TreeMap<Long, Float>();
 	private TreeMap<Long, Float> weekTotals = new TreeMap<Long, Float>();
 	private DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
@@ -90,7 +82,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 		stopButton = findViewById(R.id.StopButton);
 		stopButton.setOnClickListener(this);
 
-		precision = Settings.getPrecision(this);
 		hoursFormat.setMaximumFractionDigits(5);
 
 		showSessions(getSessions(currentProjectId));
@@ -101,7 +92,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		calculateTotals(monthTotals, weekTotals);
+		calculateTotals(this, currentProjectId, monthTotals, weekTotals);
 	}
 
 	/**
@@ -113,14 +104,14 @@ public class Sessions extends ListActivity implements OnClickListener {
 	 * @param weekTotals
 	 *            total hours by the id of last session this week
 	 */
-	private void calculateTotals(TreeMap<Long, Float> monthTotals,
+	public static void calculateTotals(Context context, long projectId, TreeMap<Long, Float> monthTotals,
 			TreeMap<Long, Float> weekTotals) {
 		monthTotals.clear();
 		weekTotals.clear();
-		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
+		Cursor cursor = context.getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "_id", "start", "end" },
 				"project_id=? and end is not null",
-				new String[] { "" + currentProjectId }, "start desc");
+				new String[] { "" + projectId }, "start desc");
 		try {
 			String currentMonthKey = "";
 			float currentMonthTotal = 0f;
@@ -154,7 +145,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 					currentMonthTotal = 0f;
 					firstSessionIdOfMonth = sessionId;
 				}
-				currentMonthTotal += getWorkHours(startTime, endTime);
+				currentMonthTotal += getWorkHours(context, startTime, endTime);
 
 				if (!currentWeekKey.equals(weekKey)) {
 					// beginning of a new week
@@ -165,7 +156,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 					currentWeekTotal = 0f;
 					firstSessionIdOfWeek = sessionId;
 				}
-				currentWeekTotal += getWorkHours(startTime, endTime);
+				currentWeekTotal += getWorkHours(context, startTime, endTime);
 			}
 			if (currentMonthKey.length() > 0) {
 				monthTotals.put(firstSessionIdOfMonth, currentMonthTotal);
@@ -220,101 +211,14 @@ public class Sessions extends ListActivity implements OnClickListener {
 	 * 
 	 */
 	private void shareSession() {
-		try {
-			String fileName = getString(R.string.time_report) + " " + projectName + " " + DateFormat.getDateFormat(this).format(System.currentTimeMillis()).replace('/', '-');
-			File reportFile = new File(Environment.getExternalStorageDirectory(), fileName + ".html");
-			FileOutputStream os = new FileOutputStream(reportFile);
-			writeHtmlReport(os);
-			os.close();
-
-			Intent i=new Intent(android.content.Intent.ACTION_SEND);
-			i.putExtra(Intent.EXTRA_SUBJECT, fileName);
-			i.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + reportFile));
-			i.setType("text/html");
-			startActivity(Intent.createChooser(i, getString(R.string.share_title)));
-		} catch (Exception e) {
-			new AlertDialog.Builder(this)
-		      .setMessage("backup error " + e)
-		      .show();
-		}
+		Intent i = new Intent(this, ShareProjectReport.class);
+		i.setData(ContentUris.withAppendedId(CONTENT_URI_PROJECT, currentProjectId));
+		startActivity(i);
 	}
 
 	/**
-	 * Writes time report as html in UTF-8 encoding to the output stream.
-	 * @param os where xml is written
-	 * @throws IOException
+	 * 
 	 */
-	public void writeHtmlReport(OutputStream os) throws IOException {
-		OutputStreamWriter sw = new OutputStreamWriter(os, "UTF-8");
-		PrintWriter pw = new PrintWriter(sw);
-		Cursor sessionCursor = null;
-		try {
-			sessionCursor = getContentResolver().query(CONTENT_URI_SESSION,
-					new String[] { "_id", "start", "end", "comment" }, 
-					"project_id=? and end is not null", new String[] {"" + currentProjectId}, "start asc");
-			String lastDate = null;
-			long lastId = -1;
-			float daySum = 0f;
-			StringBuilder comments = new StringBuilder();
-			pw.println("<html><body><table>");
-			pw.println("<tr><td>date</td><td>day</td><td>comment</td><td>week</td><td>month</td></tr>");
-			while (sessionCursor.moveToNext()) {
-				long id = sessionCursor.getLong(0);
-				long startTime = sessionCursor.getLong(1);
-				long endTime = sessionCursor.getLong(2);
-				String comment = sessionCursor.getString(3);
-				
-				String dateString = DateFormat.getDateFormat(this).format(startTime);
-				if (lastDate == null) {
-					lastDate = dateString;
-				} else if (!lastDate.equals(dateString)) {
-			    	printDateLine(pw, comments.toString(), lastDate, daySum, lastId);
-					lastDate = dateString;
-					daySum = 0f;
-					comments.setLength(0);
-			    }
-			    daySum += getWorkHours(startTime, endTime);
-		    	if (comment != null && comment.length() > 0) {
-		    		if (comments.length() > 0 && comment.length() > 0) {
-		    			comments.append(", ");
-		    		}
-		    		comments.append(comment);
-		    	}
-		    	lastId = id;
-			}
-			if (lastId != -1) {
-		    	printDateLine(pw, comments.toString(), lastDate, daySum, lastId);
-			}
-			pw.println("</table></body></html>");
-		} finally {
-			if (sessionCursor != null) {
-				sessionCursor.close();
-			}
-		}
-		pw.flush();
-	}
-
-	private void printDateLine(PrintWriter pw, String comments, String dateString, float workHours, long lastId) {
-		pw.print("<tr><td>" + dateString + "</td><td>" + hoursFormat.format(workHours) + "</td><td>");
-		if (comments.length() > 0) {
-			pw.print(comments);
-		}
-		pw.print("</td>");
-		
-		Float weekTotal = weekTotals.get(lastId);
-		pw.print("<td>");
-		if (weekTotal != null) {
-			pw.print(hoursFormat.format(weekTotal));
-		}
-		pw.print("</td>");
-		
-		Float monthTotal = monthTotals.get(lastId);
-		pw.print("<td>");
-		if (monthTotal != null) {
-			pw.print(hoursFormat.format(monthTotal));
-		}
-		pw.println("</td>");
-	}
 
 	/**
 	 * 
@@ -366,7 +270,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 		getContentResolver().delete(CONTENT_URI_SESSION, "_id=?",
 				new String[] { "" + id });
 		adjustButtonEnablement();
-		calculateTotals(monthTotals, weekTotals);
+		calculateTotals(this, currentProjectId, monthTotals, weekTotals);
 	}
 
 	public class SessionListViewBinder implements
@@ -429,7 +333,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				if (cursor.isNull(1)) {
 					endTime = System.currentTimeMillis();
 				}
-				float workHours = getWorkHours(startTime, endTime);
+				float workHours = getWorkHours(Sessions.this, startTime, endTime);
 				hoursView.setText(hoursFormat.format(workHours) + getString(R.string.h));
 				return true;
 			} else if (columnIndex == 4) {
@@ -504,11 +408,12 @@ public class Sessions extends ListActivity implements OnClickListener {
 				new String[] { "" + projectId }, "start desc");
 	}
 
-	private float getWorkHours(long startTime, long endTime) {
+	public static float getWorkHours(Context context, long startTime, long endTime) {
+		float precision = Settings.getPrecision(context);
 		long lunchMsExclusion = 0;
-		if (Settings.isExcludeLunchTime(this)) {
-			long lunchStart = Settings.getLunchStart(this);
-			long lunchEnd = Settings.getLunchEnd(this);
+		if (Settings.isExcludeLunchTime(context)) {
+			long lunchStart = Settings.getLunchStart(context);
+			long lunchEnd = Settings.getLunchEnd(context);
 
 			Calendar cal = Calendar.getInstance();
 			cal.setTimeInMillis(startTime);
@@ -573,7 +478,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 					startButton.setEnabled(true);
 					stopButton.setEnabled(false);
 
-					calculateTotals(monthTotals, weekTotals);
+					calculateTotals(this, currentProjectId, monthTotals, weekTotals);
 				}
 				break;
 			}

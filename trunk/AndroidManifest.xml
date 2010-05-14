@@ -21,9 +21,11 @@
 		<activity android:name=".Settings" android:label="@string/settings_menu_label"
 			android:theme="@android:style/Theme.Light">
 		</activity>
+		<activity android:name=".ShareProjectReport" android:label="@string/share_project_report_label"
+			android:theme="@android:style/Theme.Light">
+		</activity>
 		<provider android:name="MyTimeContentProvider"
 			android:authorities="se.rende.mytime" />
 	</application>
 	<uses-sdk android:minSdkVersion="4" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest> 
