@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:padding="8dip" android:orientation="vertical">
+	<TextView android:text="@string/share_project_period_label"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"
+		android:textSize="16sp"></TextView>
+	<Spinner android:id="@+id/share_project_period"
+		android:layout_width="wrap_content" android:layout_height="wrap_content"></Spinner>
+	<CheckBox android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/share_project_include_week_totals"
+		android:text="@string/share_project_include_week_totals_label"></CheckBox>
+	<CheckBox android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/share_project_include_month_totals"
+		android:text="@string/share_project_include_month_totals_label"></CheckBox>
+	<CheckBox android:layout_width="wrap_content"
+		android:layout_height="wrap_content" android:id="@+id/share_project_group_by_day"
+		android:text="@string/share_project_group_by_day_label"></CheckBox>
+	<LinearLayout android:id="@+id/LinearLayout01"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:orientation="horizontal">
+		<Button android:text="@string/share_project_button_label"
+			android:id="@+id/share_project_button" android:layout_width="fill_parent"
+			android:layout_height="wrap_content" android:layout_gravity="bottom"></Button>
+	</LinearLayout>
+
+
+
+</LinearLayout>
