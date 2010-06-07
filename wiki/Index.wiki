@@ -1,0 +1,17 @@
+#My Time - Time Reporting for Android
+
+= Introduction =
+
+Simplistic timesheet application.
+Keeps a list of projects and a list of sessions with date/times and the number of hours worked. Just click start to add a new session, and stop to end it. Send report by mail etc.
+
+= User Interface =
+
+== Main Page - Projects ==
+
+
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
