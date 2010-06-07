@@ -1,13 +1,13 @@
-#My Time - Time Reporting for Android
+= My Time - Time Reporting for Android =
 
-= Introduction =
+== Introduction ==
 
 Simplistic timesheet application.
 Keeps a list of projects and a list of sessions with date/times and the number of hours worked. Just click start to add a new session, and stop to end it. Send report by mail etc.
 
-= User Interface =
+== User Interface ==
 
-== Main Page - Projects ==
+=== Main Page - Projects ===
 
 ||http://android-my-time.googlecode.com/svn/wiki/images/projects.png||
 
@@ -21,6 +21,8 @@ Displays the list of projects to report time for.
    * Add project - opens the project name dialog to let you name the new project
    * Settings - opens the settings page
    * About - opens the about page with version info and link to this web site
+
+=== Sessions page ===
 
 ||http://android-my-time.googlecode.com/svn/wiki/images/sessions.png||
 
