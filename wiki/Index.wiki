@@ -9,7 +9,9 @@ Keeps a list of projects and a list of sessions with date/times and the number o
 
 == Main Page - Projects ==
 
-http://android-my-time.googlecode.com/svn/wiki/images/projects.png
+||http://android-my-time.googlecode.com/svn/wiki/images/projects.png||
+
+Displays the list of projects to report time for.
 
  * tap project to open the sessions page for this project
  * hold finger on project to open context menu:
@@ -20,8 +22,15 @@ http://android-my-time.googlecode.com/svn/wiki/images/projects.png
    * Settings - opens the settings page
    * About - opens the about page with version info and link to this web site
 
+||http://android-my-time.googlecode.com/svn/wiki/images/sessions.png||
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+Lists the sessions for a project. The times are summed to months and weeks (obeying the week numbering rules of the current locale).
+
+ * tap start to add a session starting at current time, and running as the end time.
+ * tap stop to end the running session
+ * tap a session to edit its start and end date and time and optional comment
+ * hold finger on session to get the context menu:
+   * delete - deletes this session
+ * panel menu:
+   * Add session - adds a session and opens the session edit dialog with start/end time/date and comment
+   * Share - to send a time report by mail or other media, after selecting period and other options.
