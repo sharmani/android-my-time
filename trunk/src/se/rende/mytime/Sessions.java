@@ -283,7 +283,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				TextView timeView = (TextView) view;
 				long time = cursor.getLong(columnIndex);
 				if (time == 0) {
-					timeView.setText("running");
+					timeView.setText(getString(R.string.project_status_running));
 				} else {
 					if (columnIndex == 1) {
 						// check if from-to same date
@@ -346,7 +346,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 					monthTotalLabelView
 							.setText(dateFormatSymbols.getMonths()[cal
 									.get(Calendar.MONTH)]
-									+ " total:");
+									+ " "
+									+ getString(R.string.report_date_line_total)
+									+ ":");
 					monthTotalLabelView.setMaxHeight(1000);
 				} else {
 					monthTotalLabelView.setMaxHeight(0);
@@ -370,8 +372,11 @@ public class Sessions extends ListActivity implements OnClickListener {
 				if (weekTotals.containsKey(id)) {
 					Calendar cal = Calendar.getInstance();
 					cal.setTimeInMillis(start);
-					weekTotalLabelView.setText("Week "
-							+ cal.get(Calendar.WEEK_OF_YEAR) + " total:");
+					weekTotalLabelView.setText(getString(R.string.report_date_line_week) 
+							+ " " 
+							+ getString(R.string.report_date_line_total)
+							+ cal.get(Calendar.WEEK_OF_YEAR) + " " +
+									":");
 					weekTotalLabelView.setMaxHeight(1000);
 				} else {
 					weekTotalLabelView.setMaxHeight(0);
