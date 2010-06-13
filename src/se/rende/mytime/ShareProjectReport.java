@@ -27,7 +27,6 @@ import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
@@ -143,11 +142,11 @@ public class ShareProjectReport extends Activity implements OnClickListener {
 	 * Sets the labels for the period selection spinner, to include the specific month names and week numbers.
 	 */
 	private void setPeriodLabels() {
-		periodInfos.add(PeriodInfo.getMonthInfo("This Month", System.currentTimeMillis(), 0, dateFormatSymbols));
-		periodInfos.add(PeriodInfo.getMonthInfo("Last Month", System.currentTimeMillis(), -1, dateFormatSymbols));
-		periodInfos.add(PeriodInfo.getWeekInfo("This Week", System.currentTimeMillis(), 0));
-		periodInfos.add(PeriodInfo.getWeekInfo("Last Week", System.currentTimeMillis(), -1));
-		periodInfos.add(new PeriodInfo("All Sessions", 0, Long.MAX_VALUE));
+		periodInfos.add(PeriodInfo.getMonthInfo(getString(R.string.share_period_this_month), System.currentTimeMillis(), 0, dateFormatSymbols));
+		periodInfos.add(PeriodInfo.getMonthInfo(getString(R.string.share_period_last_month), System.currentTimeMillis(), -1, dateFormatSymbols));
+		periodInfos.add(PeriodInfo.getWeekInfo(getString(R.string.share_period_this_week), System.currentTimeMillis(), 0));
+		periodInfos.add(PeriodInfo.getWeekInfo(getString(R.string.share_period_last_week), System.currentTimeMillis(), -1));
+		periodInfos.add(new PeriodInfo(getString(R.string.share_period_all_sessions), 0, Long.MAX_VALUE));
 		
 		List<CharSequence> list = new ArrayList<CharSequence>();
 		for (PeriodInfo periodInfo : periodInfos) {
@@ -225,7 +224,7 @@ public class ShareProjectReport extends Activity implements OnClickListener {
 			startActivity(Intent.createChooser(i, getString(R.string.share_title)));
 		} catch (Exception e) {
 			new AlertDialog.Builder(this)
-		      .setMessage("Share error " + e)
+		      .setMessage(getString(R.string.share_error_message) + " " + e)
 		      .show();
 		}
 	}
@@ -307,7 +306,7 @@ public class ShareProjectReport extends Activity implements OnClickListener {
 			if (weekTotal != null) {
 				Calendar cal = Calendar.getInstance();
 				cal.setTimeInMillis(lastDateMillis);
-				pw.println("Week " + cal.get(Calendar.WEEK_OF_YEAR) + " total\t" + hoursFormat.format(weekTotal));
+				pw.println(getString(R.string.report_date_line_week) + " " + cal.get(Calendar.WEEK_OF_YEAR) + " " + getString(R.string.report_date_line_total) + "\t" + hoursFormat.format(weekTotal));
 			}
 		}
 		

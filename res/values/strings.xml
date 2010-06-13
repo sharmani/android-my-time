@@ -4,7 +4,6 @@
 	<string name="time_report">Time report</string>
 	<string name="no_projects">No Projects - Use Add Project menu</string>
 	<string name="no_sessions">No Sessions</string>
-	<string name="hello">My Time</string>
 	<string name="app_name">My Time</string>
 	<string name="add_project">Add Project</string>
 	<string name="edit_project">Edit Project</string>
@@ -63,4 +62,20 @@
 	<string name="share_project_include_week_totals_label">Include Week Totals</string>
 	<string name="share_project_include_month_totals_label">Include Month Totals</string>
 	<string name="share_project_group_by_day_label">Sum per Day</string>
+<string name="share_period_this_month">This Month</string>
+<string name="share_period_last_month">Last Month</string>
+<string name="share_period_this_week">This Week</string>
+<string name="share_period_last_week">Last Week</string>
+<string name="share_period_all_sessions">All Sessions</string>
+<string name="report_date_line_week">Week</string>
+<string name="report_date_line_total">total</string>
+<string name="share_error_message">Share error</string>
+<string name="project_status_running">running</string>
+<string name="alert_message_error">error</string>
+<string name="alert_message_unknown_uri">Unknown URI</string>
+<string name="about_subtitle">Minimalistic timesheet application.</string>
+<string name="about_copyright">Copyright (c) 2010 Dag Rende</string>
+<string name="about_license">Apache License, Version 2.0</string>
+<string name="about_source_code_at">Source code at:</string>
+<string name="about_source_code_url">http://code.google.com/p/android-my-time</string>
 </resources>

@@ -180,7 +180,7 @@ public class MyTime extends ListActivity {
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 			if (columnIndex == 1) {
 				TextView runIndicatorView = (TextView) view;
-				runIndicatorView.setText(cursor.getLong(1) == runningProjectId ? "running" : "");
+				runIndicatorView.setText(cursor.getLong(1) == runningProjectId ? getString(R.string.project_status_running) : "");
 				return true;
 			}
 			return false;

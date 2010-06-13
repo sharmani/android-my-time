@@ -113,7 +113,7 @@ public class Session extends Activity implements OnClickListener {
 		startDateView.setText(DateFormat.getDateFormat(this).format(startDateTime));
 		startTimeView.setText(DateFormat.getTimeFormat(this).format(startDateTime));
 		isRunning = (endDateTime == 0);
-		endDateView.setText(isRunning ? "running" : DateFormat.getDateFormat(this).format(endDateTime));
+		endDateView.setText(isRunning ? getString(R.string.project_status_running) : DateFormat.getDateFormat(this).format(endDateTime));
 		endTimeView.setText(isRunning ? "" : DateFormat.getTimeFormat(this).format(endDateTime));
 		commentView.setText(comment);
 	}

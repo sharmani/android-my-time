@@ -49,7 +49,7 @@ public class About extends Activity {
 					+ packageInfo.versionName + "." + rev.split(" ")[1]);
 		} catch (NameNotFoundException e) {
 			new AlertDialog.Builder(this)
-		      .setMessage("error: " + e)
+		      .setMessage(getString(R.string.alert_message_error) + ": " + e)
 		      .show();
 		}
 

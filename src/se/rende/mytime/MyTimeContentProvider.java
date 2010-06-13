@@ -82,7 +82,7 @@ public class MyTimeContentProvider extends ContentProvider {
 			cursor = db.query("session", projection, selection,
 					selectionArgs, null, null, orderBy);
 		} else {
-			throw new IllegalArgumentException("Unknown URI " + uri + " match=" + match);
+			throw new IllegalArgumentException(getContext().getString(R.string.alert_message_unknown_uri) + " " + uri + " match=" + match);
 		}
 
 		// Tell the cursor what uri to watch, so it knows when its
@@ -103,7 +103,7 @@ public class MyTimeContentProvider extends ContentProvider {
 		case SESSIONS_ID:
 			return SESSION_CONTENT_ITEM_TYPE;
 		default:
-			throw new IllegalArgumentException("Unknown URI " + uri);
+			throw new IllegalArgumentException(getContext().getString(R.string.alert_message_unknown_uri) + " " + uri);
 		}
 	}
 
@@ -126,7 +126,7 @@ public class MyTimeContentProvider extends ContentProvider {
 			// Notify any watchers of the change
 			newUri = ContentUris.withAppendedId(CONTENT_URI_SESSION, id);
 		} else {
-			throw new IllegalArgumentException("Unknown URI " + uri);
+			throw new IllegalArgumentException(getContext().getString(R.string.alert_message_unknown_uri) + " " + uri);
 		}
 		getContext().getContentResolver().notifyChange(newUri, null);
 		return newUri;
@@ -155,7 +155,7 @@ public class MyTimeContentProvider extends ContentProvider {
 			count = db.delete("session", appendRowId(selection, id), selectionArgs);
 			break;
 		default:
-			throw new IllegalArgumentException("Unknown URI " + uri);
+			throw new IllegalArgumentException(getContext().getString(R.string.alert_message_unknown_uri) + " " + uri);
 		}
 
 		// Notify any watchers of the change
@@ -187,7 +187,7 @@ public class MyTimeContentProvider extends ContentProvider {
 					selectionArgs);
 			break;
 		default:
-			throw new IllegalArgumentException("Unknown URI " + uri);
+			throw new IllegalArgumentException(getContext().getString(R.string.alert_message_unknown_uri) + " " + uri);
 		}
 
 		// Notify any watchers of the change
