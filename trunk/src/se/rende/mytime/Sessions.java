@@ -374,9 +374,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 					cal.setTimeInMillis(start);
 					weekTotalLabelView.setText(getString(R.string.report_date_line_week) 
 							+ " " 
+							+ cal.get(Calendar.WEEK_OF_YEAR) + " " 
 							+ getString(R.string.report_date_line_total)
-							+ cal.get(Calendar.WEEK_OF_YEAR) + " " +
-									":");
+							+ ":");
 					weekTotalLabelView.setMaxHeight(1000);
 				} else {
 					weekTotalLabelView.setMaxHeight(0);
