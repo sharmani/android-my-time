@@ -172,11 +172,32 @@ public class Session extends Activity implements OnClickListener {
 			cal.set(Calendar.MONTH, monthOfYear);
 			cal.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 			if (isStart) {
+				if (sameDate(startDateTime, endDateTime)) {
+					endDateTime = cal.getTimeInMillis();
+				}
 				startDateTime = cal.getTimeInMillis();
 			} else {
 				endDateTime = cal.getTimeInMillis();
 			}
 			showSession();
+		}
+
+		/**
+		 * true if the two times is on the same date.
+		 * @param startDateTime
+		 * @param endDateTime
+		 * @return true if on same date
+		 */
+		private boolean sameDate(long startDateTime, long endDateTime) {
+			Calendar cal = GregorianCalendar.getInstance();
+			cal.setTimeInMillis(startDateTime);
+			int startYear = cal.get(Calendar.YEAR);
+			int startMonth = cal.get(Calendar.MONTH);
+			int startDay = cal.get(Calendar.DAY_OF_MONTH);
+			cal.setTimeInMillis(endDateTime);
+			return startYear == cal.get(Calendar.YEAR) 
+					&& startMonth == cal.get(Calendar.MONTH) 
+					&& startDay == cal.get(Calendar.DAY_OF_MONTH);
 		}
 	}
 	
@@ -194,11 +215,32 @@ public class Session extends Activity implements OnClickListener {
 			cal.set(Calendar.HOUR_OF_DAY, hour);
 			cal.set(Calendar.MINUTE, minute);
 			if (isStart) {
+				if (sameHour(startDateTime, endDateTime)) {
+					endDateTime = cal.getTimeInMillis();
+				}
 				startDateTime = cal.getTimeInMillis();
 			} else {
 				endDateTime = cal.getTimeInMillis();
 			}
 			showSession();
+		}
+
+		/**
+		 * true if the two times is on the same hour.
+		 * @param startDateTime
+		 * @param endDateTime
+		 * @return true if on same hour
+		 */
+		private boolean sameHour(long startDateTime, long endDateTime) {
+			Calendar cal = GregorianCalendar.getInstance();
+			cal.setTimeInMillis(startDateTime);
+			int startHour = cal.get(Calendar.HOUR_OF_DAY);
+			int startMinute = cal.get(Calendar.MINUTE);
+			int startSecond = cal.get(Calendar.SECOND);
+			cal.setTimeInMillis(endDateTime);
+			return startHour == cal.get(Calendar.HOUR_OF_DAY) 
+					&& startMinute == cal.get(Calendar.MINUTE) 
+					&& startSecond == cal.get(Calendar.SECOND);
 		}
 	}
 }
