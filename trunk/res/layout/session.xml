@@ -39,8 +39,8 @@
 			android:paddingBottom="10dip" />
 	</LinearLayout>
 	<TextView android:layout_width="wrap_content"
-		android:layout_height="wrap_content" android:text="@string/WhatLabel"></TextView>
-	<EditText android:id="@+id/SessionCommentEditText"
+		android:layout_height="wrap_content" android:text="@string/WhatLabel"/>
+	<AutoCompleteTextView android:id="@+id/SessionCommentEditText"
 		android:layout_height="wrap_content" android:layout_width="fill_parent"
 		android:textSize="18sp" android:text="A comment text example" />
 </LinearLayout>
