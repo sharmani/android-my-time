@@ -32,11 +32,13 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 
 /**
  * Handles one session and let user edit start/stop time and What string.
@@ -45,7 +47,7 @@ import android.widget.TimePicker;
  */
 public class Session extends Activity implements OnClickListener {
 	private long currentSessionId;
-	private EditText commentView;
+	private AutoCompleteTextView commentView;
 	private boolean isRunning;
 	private Button startDateView;
 	private Button startTimeView;
@@ -57,6 +59,7 @@ public class Session extends Activity implements OnClickListener {
 	private long currentProjectId;
 	private String projectName;
 	private TextView projectNameView;
+	private Cursor suggestionCursor;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +77,8 @@ public class Session extends Activity implements OnClickListener {
 		endDateView.setOnClickListener(this);
 		endTimeView = (Button) findViewById(R.id.SessionEndTime);
 		endTimeView.setOnClickListener(this);
-		commentView = (EditText) findViewById(R.id.SessionCommentEditText);
-
+		commentView = (AutoCompleteTextView) findViewById(R.id.SessionCommentEditText);
+		
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "start", "end", "comment", "project_id" }, "_id=?",
 				new String[] { "" + currentSessionId }, null);
@@ -91,8 +94,56 @@ public class Session extends Activity implements OnClickListener {
 		} finally {
 			cursor.close();
 		}
+
+		setupCommentFieldAutoCompletion();
+
 		showSession();
+	}
+
+	/**
+	 * Add drop-down to comment field with suggestions from sessions around this one.
+	 */
+	private void setupCommentFieldAutoCompletion() {
+		setSuggestionCursor();
+		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
+				android.R.layout.simple_dropdown_item_1line, suggestionCursor, new String[] {"comment"}, 
+				new int[] {android.R.id.text1});
+		adapter.setCursorToStringConverter(new CursorToStringConverter() {
+			@Override
+			public CharSequence convertToString(Cursor cursor) {
+				return cursor.getString(1);
+			}
+		});
+		commentView.setThreshold(1);
+		commentView.setAdapter(adapter);
+	}
+
+	/**
+	 * Sets suggestionCursor to the list of comments closest to current session in time.
+	 */
+	private void setSuggestionCursor() {
+		suggestionCursor = new MyTimeData(this).getReadableDatabase().rawQuery(
+				"select 0 _id, comment, min(abs(start - ?)) timedist " +
+				"from session " +
+				"where project_id=? and comment is not null and comment <> '' " +
+				"group by comment " +
+				"order by timedist", 
+				new String[] {"" + startDateTime, "" + currentProjectId});
+        if (suggestionCursor != null) {
+            startManagingCursor(suggestionCursor);
+        }
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
 		
+	}
+	
+	@Override
+	protected void onRestart() {
+		super.onRestart();
+		setSuggestionCursor();
 	}
 	
 	private String getProjectName(long projectId) {
@@ -180,6 +231,7 @@ public class Session extends Activity implements OnClickListener {
 				endDateTime = cal.getTimeInMillis();
 			}
 			showSession();
+			setupCommentFieldAutoCompletion();
 		}
 
 		/**
@@ -223,6 +275,7 @@ public class Session extends Activity implements OnClickListener {
 				endDateTime = cal.getTimeInMillis();
 			}
 			showSession();
+			setupCommentFieldAutoCompletion();
 		}
 
 		/**
