@@ -19,7 +19,6 @@
 	<LinearLayout android:orientation="vertical"
 		android:layout_width="fill_parent" android:layout_height="fill_parent">
 		<ListView android:id="@android:id/list" android:layout_width="wrap_content"
-			android:dividerHeight="10dip" android:divider="#ffffffff"
 			android:layout_height="wrap_content" />
 		<TextView android:id="@android:id/empty"
 			android:layout_width="wrap_content" android:layout_height="wrap_content"
