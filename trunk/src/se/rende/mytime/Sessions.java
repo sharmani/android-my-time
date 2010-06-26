@@ -53,9 +53,9 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
  */
 public class Sessions extends ListActivity implements OnClickListener {
 	private static final NumberFormat hoursFormat = NumberFormat.getInstance();
-	private static final String[] FROM = { "start", "end", "comment", "_id",
+	private static final String[] FROM = { "start", "end", "_id+5", "comment", "_id",
 			"_id+1", "_id+2", "_id+3", "_id+4" };
-	private static final int[] TO = { R.id.start_date_time, R.id.end_date_time,
+	private static final int[] TO = { R.id.start_date_time, R.id.end_time, R.id.end_date_time,
 			R.id.comment, R.id.hours, R.id.month_total_label, R.id.month_total,
 			R.id.week_total_label, R.id.week_total };
 	private long currentProjectId = 1;
@@ -287,23 +287,16 @@ public class Sessions extends ListActivity implements OnClickListener {
 				} else {
 					if (columnIndex == 1) {
 						// check if from-to same date
-						cal.setTimeInMillis(cursor.getLong(0));
-						int year = cal.get(Calendar.YEAR);
-						int month = cal.get(Calendar.MONTH);
-						int day = cal.get(Calendar.DAY_OF_MONTH);
-						cal.setTimeInMillis(cursor.getLong(1));
-						if (year == cal.get(Calendar.YEAR)
-								&& month == cal.get(Calendar.MONTH)
-								&& day == cal.get(Calendar.DAY_OF_MONTH)) {
+						if (isFromToSameDate(cursor)) {
 							// same date - display only time
+							timeView.setVisibility(View.VISIBLE);
+							timeView.setMaxHeight(100);
 							timeView.setText(DateFormat.getTimeFormat(
 									Sessions.this).format(time));
 						} else {
-							timeView.setText(DateFormat.getDateFormat(
-									Sessions.this).format(time)
-									+ " "
-									+ DateFormat.getTimeFormat(Sessions.this)
-											.format(time));
+							// different dates - hide field as date-time will be displayed below
+							timeView.setVisibility(View.INVISIBLE);
+							timeView.setMaxHeight(0);
 						}
 					} else {
 						timeView.setText(DateFormat
@@ -315,6 +308,27 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 2) {
+				TextView timeView = (TextView) view;
+				long time = cursor.getLong(1);
+				if (time == 0) {
+					timeView.setVisibility(View.INVISIBLE);
+					timeView.setMaxHeight(0);
+				} else {
+					if (isFromToSameDate(cursor)) {
+						timeView.setVisibility(View.INVISIBLE);
+						timeView.setMaxHeight(0);
+					} else {
+						timeView.setVisibility(View.VISIBLE);
+						timeView.setMaxHeight(100);
+						timeView.setText(DateFormat.getDateFormat(
+								Sessions.this).format(time)
+								+ " "
+								+ DateFormat.getTimeFormat(Sessions.this)
+										.format(time));
+					}
+				}
+				return true;
+			} else if (columnIndex == 3) {
 				TextView commentView = (TextView) view;
 				String comment = cursor.getString(columnIndex);
 				if (comment == null || comment.trim().length() == 0) {
@@ -326,7 +340,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 					commentView.setMaxHeight(100);
 				}
 				return true;
-			} else if (columnIndex == 3) {
+			} else if (columnIndex == 4) {
 				TextView hoursView = (TextView) view;
 				long startTime = cursor.getLong(0);
 				long endTime = cursor.getLong(1);
@@ -336,9 +350,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 				float workHours = getWorkHours(Sessions.this, startTime, endTime);
 				hoursView.setText(hoursFormat.format(workHours) + getString(R.string.h));
 				return true;
-			} else if (columnIndex == 4) {
+			} else if (columnIndex == 5) {
 				TextView monthTotalLabelView = (TextView) view;
-				long id = cursor.getLong(3);
+				long id = cursor.getLong(4);
 				long start = cursor.getLong(0);
 				if (monthTotals.containsKey(id)) {
 					Calendar cal = Calendar.getInstance();
@@ -354,9 +368,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 					monthTotalLabelView.setMaxHeight(0);
 				}
 				return true;
-			} else if (columnIndex == 5) {
+			} else if (columnIndex == 6) {
 				TextView monthTotalView = (TextView) view;
-				long id = cursor.getLong(3);
+				long id = cursor.getLong(4);
 				Float total = monthTotals.get(id);
 				if (total != null) {
 					monthTotalView.setText(hoursFormat.format(total) + getString(R.string.h));
@@ -365,9 +379,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 					monthTotalView.setMaxHeight(0);
 				}
 				return true;
-			} else if (columnIndex == 6) {
+			} else if (columnIndex == 7) {
 				TextView weekTotalLabelView = (TextView) view;
-				long id = cursor.getLong(3);
+				long id = cursor.getLong(4);
 				long start = cursor.getLong(0);
 				if (weekTotals.containsKey(id)) {
 					Calendar cal = Calendar.getInstance();
@@ -382,9 +396,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 					weekTotalLabelView.setMaxHeight(0);
 				}
 				return true;
-			} else if (columnIndex == 7) {
+			} else if (columnIndex == 8) {
 				TextView weekTotalView = (TextView) view;
-				long id = cursor.getLong(3);
+				long id = cursor.getLong(4);
 				Float total = weekTotals.get(id);
 				if (total != null) {
 					weekTotalView.setText(hoursFormat.format(total) + getString(R.string.h));
@@ -396,6 +410,18 @@ public class Sessions extends ListActivity implements OnClickListener {
 			}
 
 			return true;
+		}
+
+		private boolean isFromToSameDate(Cursor cursor) {
+			cal.setTimeInMillis(cursor.getLong(0));
+			int year = cal.get(Calendar.YEAR);
+			int month = cal.get(Calendar.MONTH);
+			int day = cal.get(Calendar.DAY_OF_MONTH);
+			cal.setTimeInMillis(cursor.getLong(1));
+			boolean sameDate = year == cal.get(Calendar.YEAR)
+					&& month == cal.get(Calendar.MONTH)
+					&& day == cal.get(Calendar.DAY_OF_MONTH);
+			return sameDate;
 		}
 	}
 

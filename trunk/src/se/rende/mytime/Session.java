@@ -96,7 +96,6 @@ public class Session extends Activity implements OnClickListener {
 		}
 
 		setupCommentFieldAutoCompletion();
-
 		showSession();
 	}
 
@@ -146,6 +145,12 @@ public class Session extends Activity implements OnClickListener {
 		setSuggestionCursor();
 	}
 	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		saveSession();
+	}
+	
 	private String getProjectName(long projectId) {
 		Cursor projectCursor = getContentResolver().query(CONTENT_URI_PROJECT,
 				new String[] { "name" }, "_id=" + projectId, null, null);
@@ -161,17 +166,19 @@ public class Session extends Activity implements OnClickListener {
 
 	private void showSession() {
 		projectNameView.setText(projectName);
+		showDateTime();
+		commentView.setText(comment);
+	}
+
+	private void showDateTime() {
 		startDateView.setText(DateFormat.getDateFormat(this).format(startDateTime));
 		startTimeView.setText(DateFormat.getTimeFormat(this).format(startDateTime));
 		isRunning = (endDateTime == 0);
 		endDateView.setText(isRunning ? getString(R.string.project_status_running) : DateFormat.getDateFormat(this).format(endDateTime));
 		endTimeView.setText(isRunning ? "" : DateFormat.getTimeFormat(this).format(endDateTime));
-		commentView.setText(comment);
 	}
 
-	@Override
-	protected void onPause() {
-		super.onPause();
+	private void saveSession() {
 		ContentValues values = new ContentValues();
 		values.put("start", startDateTime);
 		if (endDateTime != 0) {
@@ -230,7 +237,7 @@ public class Session extends Activity implements OnClickListener {
 			} else {
 				endDateTime = cal.getTimeInMillis();
 			}
-			showSession();
+			showDateTime();
 			setupCommentFieldAutoCompletion();
 		}
 
@@ -274,7 +281,7 @@ public class Session extends Activity implements OnClickListener {
 			} else {
 				endDateTime = cal.getTimeInMillis();
 			}
-			showSession();
+			showDateTime();
 			setupCommentFieldAutoCompletion();
 		}
 
