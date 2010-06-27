@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="h">小时</string>
+	<string name="time_report">时间报告</string>
+	<string name="no_projects">无工程 - 在菜单中使用添加工程</string>
+	<string name="no_sessions">无会议</string>
+	<string name="app_name">My Time</string>
+	<string name="add_project">添加工程</string>
+	<string name="edit_project">编辑工程</string>
+	<string name="delete_project">删除工程</string>
+	<string name="delete_session">删除会议</string>
+	<string name="new_project">新建工程</string>
+	<string name="new_project_name_label">工程名</string>
+	<string name="ok_button_label">确定</string>
+	<string name="cancel_button_label">取消</string>
+	<string name="StartButtonLabel">开始</string>
+	<string name="StopButtonLabel">停止</string>
+	<string name="sessions_label">会议</string>
+	<string name="session_label">会议</string>
+	<string name="FromLabel">
+		<b>从</b>
+	</string>
+	<string name="ToLabel">
+		<b>到</b>
+	</string>
+	<string name="WhatLabel">
+		<b>什么事</b>
+	</string>
+	<string name="about_menu">关于</string>
+	<string name="settings_menu_label">设置</string>
+	<string name="precision_setting_label">精确度</string>
+	<string name="precision_setting_summary">工作时间除以以下值后四舍五入得到的小时数</string>
+	<string name="lunch_start_label">午餐起始</string>
+	<string name="lunch_start_summary">午餐开始于</string>
+	<string name="lunch_end_label">午餐完毕</string>
+	<string name="lunch_end_summary">午餐结束于</string>
+	<string name="add_session">添加会议</string>
+	<string name="about_version">版本</string>
+	<string name="exclude_lunch_label">排除午餐</string>
+	<string name="exclude_lunch_summary">排除与工作时间重叠的午餐时间</string>
+	<string name="pref_precision_key">precision</string>
+	<string name="pref_exclude_lunch_time_key">exclude_lunch_time</string>
+	<string name="pref_lunch_start_key">lunch_start</string>
+	<string name="pref_lunch_end_key">lunch_end</string>
+	<string name="pref_share_project_period_key">share_project_period</string>
+	<string name="pref_share_project_include_week_totals_key">share_project_include_week_totals</string>
+	<string name="pref_share_project_include_month_totals_key">share_project_include_month_totals</string>
+	<string name="pref_share_project_group_by_day_key">share_project_group_by_day</string>
+	<string name="total_label">总共</string>
+	<string name="hour_abbrev">小时</string>
+	<string name="share_subject">我的时间表报告</string>
+	<string name="share_title">分享时间报告</string>
+	<string name="export_title">导出所有的时间报告</string>
+	<string name="export_menu_item">导出</string>
+	<string name="share_menu_item">分享</string>
+	<string name="projects_menu_other">其他</string>
+	<string name="projects_menu_export">导出</string>
+	<string name="activity_name_import">导入我的时间表</string>
+	<string name="share_project_report_label">分享工程报告</string>
+	<string name="share_project_button_label">分享</string>
+	<string name="share_project_period_label">时期</string>
+	<string name="share_project_include_week_totals_label">包含周数</string>
+	<string name="share_project_include_month_totals_label">包含月数</string>
+	<string name="share_project_group_by_day_label">每天总数</string>
+<string name="share_period_this_month">本月</string>
+<string name="share_period_last_month">上个月</string>
+<string name="share_period_this_week">本周</string>
+<string name="share_period_last_week">上周</string>
+<string name="share_period_all_sessions">所有会议</string>
+<string name="report_date_line_week">周</string>
+<string name="report_date_line_total">总共</string>
+<string name="share_error_message">分享错误</string>
+<string name="project_status_running">运行中</string>
+<string name="alert_message_error">错误</string>
+<string name="alert_message_unknown_uri">未知的 URI</string>
+<string name="about_subtitle">简约工作表程序</string>
+<string name="about_copyright">版权所有 (c) 2010 Dag Rende</string>
+<string name="about_license">Apache 许可协议，2.0 版本</string>
+<string name="about_source_code_at">源码位于：</string>
+<string name="about_source_code_url">http://code.google.com/p/android-my-time</string>
+</resources>
