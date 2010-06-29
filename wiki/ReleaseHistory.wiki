@@ -1,4 +1,5 @@
 #summary Release history.
+#labels Featured
 
 = Releases =
 
