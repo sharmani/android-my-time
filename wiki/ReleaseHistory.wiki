@@ -2,16 +2,26 @@
 
 = Releases =
 
+== Version 1.4 ==
+ * New theme - black background, changed text sizes
+ * Change from date/time also changes to date/time if same before change
+ * Content assist when editing comment field, with most recent comments listed
+ * Chinese localization
+
 == Version 1.3 ==
  * Share sessions and totals by mail and other media
  * Runs in Android 1.5 devices or later
 
 == Version 1.2 ==
-* added month and week sum in sessions list
-
+ * Added month and week sum in sessions list
+ * Added exclude lunch time in settings
 
 == Version 1.1 ==
-
+ * Now uses locale setting to format date/time
+ * Added running indicator in project list
 
 == Version 1.0 ==
- 
+ * Project list
+ * Add, edit, delete project
+ * Session list
+ * Start/stop buttons
