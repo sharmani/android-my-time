@@ -2,7 +2,7 @@
 
 = Releases =
 
-== Version 1.4 ==
+== Version 1.4 (not out yet) ==
  * New theme - black background, changed text sizes
  * Change from date/time also changes to date/time if same before change
  * Content assist when editing comment field, with most recent comments listed
