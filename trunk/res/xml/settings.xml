@@ -3,9 +3,9 @@
 	<EditTextPreference android:key="@string/pref_precision_key"
 		android:title="@string/precision_setting_label" android:summary="@string/precision_setting_summary"
 		android:defaultValue="0.25" />
-	<CheckBoxPreference android:title="Exclude lunch"
+	<CheckBoxPreference android:title="@string/exclude_lunch_label"
 		android:defaultValue="false" android:key="@string/pref_exclude_lunch_time_key"
-		android:summary="Exclude lunch time that overlaps work time"></CheckBoxPreference>
+		android:summary="@string/exclude_lunch_summary"></CheckBoxPreference>
 	<TimePickerPreference android:key="@string/pref_lunch_start_key"
 		android:title="@string/lunch_start_label" android:summary="@string/lunch_start_summary"
 		android:defaultValue="11:30" android:dependency="@string/pref_exclude_lunch_time_key" />
