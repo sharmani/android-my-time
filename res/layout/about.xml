@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:padding="10dip" android:orientation="vertical" android:background="#ffffff">
+	android:padding="10dip" android:orientation="vertical">
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="@string/app_name"
-		android:gravity="center" android:textSize="28sp" android:paddingBottom="15dip" android:textColor="#000000"/>
+		android:gravity="center" android:textSize="28sp" android:paddingBottom="15dip"/>
 	<TextView android:layout_width="fill_parent" 
 		android:layout_height="wrap_content" android:text="@string/about_subtitle"
-		android:gravity="center" android:paddingBottom="10dip" android:textColor="#000000"/>
+		android:gravity="center" android:paddingBottom="10dip"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="Version 1.1."
-		android:gravity="center" android:textColor="#000000" android:paddingBottom="20dip" android:id="@+id/about_version"/>
+		android:gravity="center" android:paddingBottom="20dip" android:id="@+id/about_version"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="@string/about_copyright"
-		android:gravity="center" android:textColor="#000000"/>
+		android:gravity="center"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="@string/about_license"
-		android:gravity="center" android:textColor="#000000" android:paddingBottom="20dip"/>
+		android:gravity="center" android:paddingBottom="20dip"/>
+	<TextView android:id="@+id/chinese_translation_notice" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:text="@string/chinese_translation_by"
+		android:gravity="center" android:paddingBottom="20dip" android:textSize="12sp"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content" android:text="@string/about_source_code_at"
-		android:gravity="center" android:textColor="#000000" android:textSize="12sp"/>
+		android:gravity="center" android:textSize="12sp"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:gravity="center" android:text="@string/about_source_code_url" android:textColor="#000000" 
+		android:gravity="center" android:text="@string/about_source_code_url" 
 		android:textSize="12sp" android:id="@+id/about_src_link"/>
 
 </LinearLayout>
