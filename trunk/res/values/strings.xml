@@ -78,4 +78,7 @@
 	<string name="about_license">Apache License, Version 2.0</string>
 	<string name="about_source_code_at">Source code at:</string>
 	<string name="about_source_code_url">http://code.google.com/p/android-my-time</string>
+	<string name="chinese_translation_by" >Chinese translation by </string>
+	<string name="chinese_translation_link">http://goapk.com</string>
+	<string name="chinese_translation_by_end"></string>
 </resources>

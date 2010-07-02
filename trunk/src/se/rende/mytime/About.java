@@ -41,7 +41,7 @@ public class About extends Activity {
 		setContentView(R.layout.about);
 
 		TextView versionTextView = (TextView) findViewById(R.id.about_version);
-		String rev = "$Revision$";
+		String rev = "$Revision$"; 
 		try {
 			PackageInfo packageInfo = getPackageManager().getPackageInfo(
 					getPackageName(), 0);
@@ -53,10 +53,27 @@ public class About extends Activity {
 		      .show();
 		}
 
+		TextView chineseLinkTextView = (TextView) findViewById(R.id.chinese_translation_notice);
+		final String goapkUrl = getString(R.string.chinese_translation_link);
+		SpannableString goapkLink = SpannableString.valueOf(goapkUrl);
+		Linkify.addLinks(goapkLink, Linkify.ALL);
+		String endChar = getString(R.string.chinese_translation_by_end);
+		if (endChar.length() == 0) {
+			chineseLinkTextView.append(" ");
+		}
+		chineseLinkTextView.append(goapkLink);
+		chineseLinkTextView.append(endChar);
+		chineseLinkTextView.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(goapkUrl));
+				startActivity(myIntent);
+			}
+		});
+
 		TextView srcLinkTextView = (TextView) findViewById(R.id.about_src_link);
 		final String srcLinkText = srcLinkTextView.getText().toString();
-		SpannableString str = SpannableString
-				.valueOf(srcLinkTextView.getText());
+		SpannableString str = SpannableString.valueOf(srcLinkTextView.getText());
 		Linkify.addLinks(str, Linkify.ALL);
 		srcLinkTextView.setText(str);
 		srcLinkTextView.setOnClickListener(new OnClickListener() {
