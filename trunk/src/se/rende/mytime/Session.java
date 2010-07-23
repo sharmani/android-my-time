@@ -108,7 +108,7 @@ public class Session extends Activity implements OnClickListener {
 				android.R.layout.simple_dropdown_item_1line, suggestionCursor, new String[] {"comment"}, 
 				new int[] {android.R.id.text1});
 		adapter.setCursorToStringConverter(new CursorToStringConverter() {
-			@Override
+
 			public CharSequence convertToString(Cursor cursor) {
 				return cursor.getString(1);
 			}
@@ -189,7 +189,6 @@ public class Session extends Activity implements OnClickListener {
 				new String[] { "" + currentSessionId });
 	}
 
-	@Override
 	public void onClick(View v) {
 		if ((v == endDateView || v == endTimeView) && isRunning) {
 			return;
@@ -221,7 +220,6 @@ public class Session extends Activity implements OnClickListener {
 			this.isStart = isStart;
 		}
 
-		@Override
 		public void onDateSet(DatePicker view, int year, int monthOfYear,
 				int dayOfMonth) {
 			Calendar cal = GregorianCalendar.getInstance();
@@ -267,7 +265,6 @@ public class Session extends Activity implements OnClickListener {
 			this.isStart = isStart;
 		}
 
-		@Override
 		public void onTimeSet(TimePicker view, int hour, int minute) {
 			Calendar cal = GregorianCalendar.getInstance();
 			cal.setTimeInMillis(isStart ? startDateTime : endDateTime);

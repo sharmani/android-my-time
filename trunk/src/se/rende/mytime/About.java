@@ -64,7 +64,6 @@ public class About extends Activity {
 		chineseLinkTextView.append(goapkLink);
 		chineseLinkTextView.append(endChar);
 		chineseLinkTextView.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(goapkUrl));
 				startActivity(myIntent);
@@ -77,7 +76,6 @@ public class About extends Activity {
 		Linkify.addLinks(str, Linkify.ALL);
 		srcLinkTextView.setText(str);
 		srcLinkTextView.setOnClickListener(new OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent myIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(srcLinkText));
 				startActivity(myIntent);

@@ -277,7 +277,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 			SimpleCursorAdapter.ViewBinder {
 		Calendar cal = Calendar.getInstance();
 
-		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 			if (columnIndex == 0 || columnIndex == 1) {
 				TextView timeView = (TextView) view;
@@ -474,7 +473,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 	private View stopButton;
 	private String projectName;
 
-	@Override
 	public void onClick(View v) {
 		Cursor cursor = null;
 		try {

@@ -174,7 +174,6 @@ public class ShareProjectReport extends Activity implements OnClickListener {
 		}
 	}
 
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.share_project_button:
