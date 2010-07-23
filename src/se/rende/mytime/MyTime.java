@@ -176,7 +176,6 @@ public class MyTime extends ListActivity {
 
 	public class ProjectListViewBinder implements
 			SimpleCursorAdapter.ViewBinder {
-		@Override
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
 			if (columnIndex == 1) {
 				TextView runIndicatorView = (TextView) view;
@@ -218,13 +217,11 @@ public class MyTime extends ListActivity {
 				getString(R.string.new_project_name_label)).setView(
 				nameEditText).setPositiveButton(
 				getString(R.string.ok_button_label), new OnClickListener() {
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						addProject(nameEditText.getText().toString());
 					}
 				}).setNegativeButton(getString(R.string.cancel_button_label),
 				new OnClickListener() {
-					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 					}
@@ -251,7 +248,6 @@ public class MyTime extends ListActivity {
 						getString(R.string.new_project_name_label)).setView(
 						nameEditText).setPositiveButton(
 						getString(R.string.ok_button_label), new OnClickListener() {
-							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								setProjectName(id, nameEditText.getText()
 										.toString());
@@ -259,7 +255,6 @@ public class MyTime extends ListActivity {
 						}).setNegativeButton(
 						getString(R.string.cancel_button_label),
 						new OnClickListener() {
-							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								dialog.dismiss();
 							}

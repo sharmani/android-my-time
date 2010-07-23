@@ -35,8 +35,6 @@ public class Settings extends PreferenceActivity {
 	public static final NumberFormat format2digits = NumberFormat.getInstance();
 
 	OnSharedPreferenceChangeListener prefsChangeListener = new OnSharedPreferenceChangeListener() {
-
-		@Override
 		public void onSharedPreferenceChanged(
 				SharedPreferences sharedPreferences, String key) {
 			updatePrefSummaries();
