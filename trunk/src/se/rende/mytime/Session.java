@@ -105,8 +105,8 @@ public class Session extends Activity implements OnClickListener {
 	private void setupCommentFieldAutoCompletion() {
 		setSuggestionCursor();
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				android.R.layout.simple_dropdown_item_1line, suggestionCursor, new String[] {"comment"}, 
-				new int[] {android.R.id.text1});
+				R.layout.autocomplete_listitem, suggestionCursor, new String[] {"comment"}, 
+				new int[] {R.id.text1});
 		adapter.setCursorToStringConverter(new CursorToStringConverter() {
 
 			public CharSequence convertToString(Cursor cursor) {
