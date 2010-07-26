@@ -19,8 +19,10 @@ package se.rende.mytime;
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -34,11 +36,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.SimpleCursorAdapter;
-import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -63,9 +64,9 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 	private long currentProjectId;
 	private String projectName;
 	private TextView projectNameView;
-	private Cursor suggestionCursor;
 	private GoogleAnalyticsTracker tracker;
-
+	private List<String> suggestionList = new ArrayList<String>();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -120,16 +121,9 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 	 */
 	private void setupCommentFieldAutoCompletion() {
 		setSuggestionCursor();
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
-				R.layout.autocomplete_listitem, suggestionCursor, new String[] {"comment"}, 
-				new int[] {R.id.text1});
-		adapter.setCursorToStringConverter(new CursorToStringConverter() {
-
-			public CharSequence convertToString(Cursor cursor) {
-				return cursor.getString(1);
-			}
-		});
-		commentView.setThreshold(1);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				R.layout.autocomplete_listitem, suggestionList);
+		commentView.setThreshold(0);
 		commentView.setAdapter(adapter);
 	}
 
@@ -137,16 +131,26 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 	 * Sets suggestionCursor to the list of comments closest to current session in time.
 	 */
 	private void setSuggestionCursor() {
-		suggestionCursor = new MyTimeData(this).getReadableDatabase().rawQuery(
-				"select 0 _id, comment, min(abs(start - ?)) timedist " +
-				"from session " +
-				"where project_id=? and comment is not null and comment <> '' " +
-				"group by comment " +
-				"order by timedist", 
-				new String[] {"" + startDateTime, "" + currentProjectId});
-        if (suggestionCursor != null) {
-            startManagingCursor(suggestionCursor);
-        }
+		MyTimeData myTimeData = new MyTimeData(this);
+		Cursor cursor = null;
+		try {
+			cursor = myTimeData.getReadableDatabase().rawQuery(
+					"select 0 _id, comment, min(abs(start - ?)) timedist " +
+					"from session " +
+					"where project_id=? and comment is not null and comment <> '' " +
+					"group by comment " +
+					"order by timedist", 
+					new String[] {"" + startDateTime, "" + currentProjectId});
+			suggestionList.clear();
+			while (cursor.moveToNext()) {
+				suggestionList.add(cursor.getString(1));
+			}
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+			myTimeData.close();
+		}
 	}
 
 	/**
