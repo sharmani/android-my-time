@@ -30,6 +30,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.TreeMap;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -61,10 +63,15 @@ public class ShareProjectReport extends Activity implements OnClickListener {
 	private CheckBox groupByDay;
 	private SharedPreferences sharedPrefs;
 	private Spinner period;
+	private GoogleAnalyticsTracker tracker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		tracker = GoogleAnalyticsTracker.getInstance();
+	    tracker.start("UA-17614355-1", this);
+
 		Uri intentData = getIntent().getData();
 		currentProjectId = Long.parseLong(intentData.getLastPathSegment());
 		projectName = getProjectName();
@@ -88,6 +95,12 @@ public class ShareProjectReport extends Activity implements OnClickListener {
 		findViewById(R.id.share_project_button).setOnClickListener(this);
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		tracker.stop();
+	}
+
 	/**
 	 * Describes a period to generate a report on.
 	 */
@@ -177,7 +190,10 @@ public class ShareProjectReport extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.share_project_button:
-			savePrefs();
+		    tracker.trackPageView("/share");
+		    tracker.dispatch();
+			
+		    savePrefs();
 			shareSession();
 			break;
 
