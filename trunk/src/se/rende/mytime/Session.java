@@ -32,20 +32,24 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.SimpleCursorAdapter;
+import android.widget.SimpleCursorAdapter.CursorToStringConverter;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.SimpleCursorAdapter.CursorToStringConverter;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 /**
  * Handles one session and let user edit start/stop time and What string.
  *
  * @author Dag Rende
  */
-public class Session extends Activity implements OnClickListener {
+public class Session extends Activity implements OnClickListener, OnItemClickListener {
 	private long currentSessionId;
 	private AutoCompleteTextView commentView;
 	private boolean isRunning;
@@ -60,10 +64,15 @@ public class Session extends Activity implements OnClickListener {
 	private String projectName;
 	private TextView projectNameView;
 	private Cursor suggestionCursor;
+	private GoogleAnalyticsTracker tracker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+	    tracker = GoogleAnalyticsTracker.getInstance();
+	    tracker.start("UA-17614355-1", this);
+
 		Uri intentData = getIntent().getData();
 		currentSessionId = Long.parseLong(intentData.getLastPathSegment());
 		setContentView(R.layout.session);
@@ -78,6 +87,7 @@ public class Session extends Activity implements OnClickListener {
 		endTimeView = (Button) findViewById(R.id.SessionEndTime);
 		endTimeView.setOnClickListener(this);
 		commentView = (AutoCompleteTextView) findViewById(R.id.SessionCommentEditText);
+		commentView.setOnItemClickListener(this);
 		
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "start", "end", "comment", "project_id" }, "_id=?",
@@ -97,6 +107,12 @@ public class Session extends Activity implements OnClickListener {
 
 		setupCommentFieldAutoCompletion();
 		showSession();
+	}
+
+	@Override
+	protected void onDestroy() {		
+		super.onDestroy();
+		tracker.stop();
 	}
 
 	/**
@@ -132,7 +148,15 @@ public class Session extends Activity implements OnClickListener {
             startManagingCursor(suggestionCursor);
         }
 	}
-	
+
+	/**
+	 * User has clicked an item in the comment suggestion list.
+	 */
+	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+	    tracker.trackPageView("/auto_complete");
+	    tracker.dispatch();
+	}
+
 	@Override
 	protected void onStop() {
 		super.onStop();

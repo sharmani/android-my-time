@@ -34,16 +34,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 /**
  * Displays sessions for the project described by the item Url in intent data.
@@ -67,7 +67,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		Uri intentData = getIntent().getData();
+	    Uri intentData = getIntent().getData();
 		currentProjectId = Long.parseLong(intentData.getLastPathSegment());
 
 		setContentView(R.layout.sessions);

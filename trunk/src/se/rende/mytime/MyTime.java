@@ -22,6 +22,8 @@ import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.ComponentName;
@@ -60,17 +62,30 @@ public class MyTime extends ListActivity {
 	private long runningProjectId = 0;
 	private final ProjectListViewBinder viewBinder = new ProjectListViewBinder();
 	List<ResolveInfo> plugIns = new ArrayList<ResolveInfo>();
+	private GoogleAnalyticsTracker tracker = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
+		
+	    tracker = GoogleAnalyticsTracker.getInstance();
+	    tracker.start("UA-17614355-1", this);
+	    tracker.trackPageView("/start");
+	    tracker.dispatch();
+	    
+	    setContentView(R.layout.main);
 		getListView().setOnCreateContextMenuListener(this);
 		runningProjectId = getRunningProjectId();
 		showProjects(getProjects());
         scanPlugIns();
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		tracker.stop();
+	}
+
 	/**
 	 * Returns a cursor to the projects in alphabetical order.
 	 * @return the project cirsor
