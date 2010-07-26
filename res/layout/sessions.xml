@@ -5,14 +5,14 @@
 	<TextView android:id="@+id/sessionsProjectName"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
 		android:textSize="22sp" android:textColor="#ffffffff" android:paddingBottom="5dip" android:paddingLeft="9dip" android:text="Ajprod" android:paddingTop="1dip"/>
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:background="@drawable/buttonsbg"
 		android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:orientation="horizontal" android:paddingLeft="5dip" android:paddingTop="4dip" android:background="#ff888888">
+		android:orientation="horizontal" android:paddingLeft="5dip" android:paddingTop="4dip" android:gravity="center_vertical">
 		<Button android:text="@string/StartButtonLabel" android:id="@+id/StartButton"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical"
 			android:textSize="22sp"></Button>
 		<Button android:text="@string/StopButtonLabel" android:id="@+id/StopButton"
-			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" android:gravity="center_vertical"
 			android:textSize="22sp"></Button>
 	</LinearLayout>
 	<LinearLayout android:orientation="vertical"
