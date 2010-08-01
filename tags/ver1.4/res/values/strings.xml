@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="h">h</string>
+	<string name="time_report">Time report</string>
+	<string name="no_projects">No Projects - Use Add Project menu</string>
+	<string name="no_sessions">No Sessions</string>
+	<string name="app_name">My Time</string>
+	<string name="add_project">Add Project</string>
+	<string name="edit_project">Edit Project</string>
+	<string name="delete_project">Delete Project</string>
+	<string name="delete_session">Delete Session</string>
+	<string name="new_project">New Project</string>
+	<string name="new_project_name_label">Project Name</string>
+	<string name="ok_button_label">OK</string>
+	<string name="cancel_button_label">Cancel</string>
+	<string name="StartButtonLabel">Start</string>
+	<string name="StopButtonLabel">Stop</string>
+	<string name="sessions_label">Sessions</string>
+	<string name="session_label">Session</string>
+	<string name="FromLabel">
+		<b>From</b>
+	</string>
+	<string name="ToLabel">
+		<b>To</b>
+	</string>
+	<string name="WhatLabel">
+		<b>What</b>
+	</string>
+	<string name="about_menu">About</string>
+	<string name="settings_menu_label">Settings</string>
+	<string name="precision_setting_label">Precision</string>
+	<string name="precision_setting_summary">Round work hours to multiple of</string>
+	<string name="lunch_start_label">Lunch from</string>
+	<string name="lunch_start_summary">Lunch starts at</string>
+	<string name="lunch_end_label">Lunch to</string>
+	<string name="lunch_end_summary">Lunch ends at</string>
+	<string name="add_session">Add Session</string>
+	<string name="about_version">Version</string>
+	<string name="exclude_lunch_label">Exclude lunch</string>
+	<string name="exclude_lunch_summary">Exclude lunch time that overlaps work time</string>
+	<string name="pref_precision_key">precision</string>
+	<string name="pref_exclude_lunch_time_key">exclude_lunch_time</string>
+	<string name="pref_lunch_start_key">lunch_start</string>
+	<string name="pref_lunch_end_key">lunch_end</string>
+	<string name="pref_share_project_period_key">share_project_period</string>
+	<string name="pref_share_project_include_week_totals_key">share_project_include_week_totals</string>
+	<string name="pref_share_project_include_month_totals_key">share_project_include_month_totals</string>
+	<string name="pref_share_project_group_by_day_key">share_project_group_by_day</string>
+	<string name="total_label">total</string>
+	<string name="hour_abbrev">h</string>
+	<string name="share_subject">My Time Report</string>
+	<string name="share_title">Share Time Report</string>
+	<string name="export_title">Export all time reports</string>
+	<string name="export_menu_item">Export</string>
+	<string name="share_menu_item">Share</string>
+	<string name="projects_menu_other">Other</string>
+	<string name="projects_menu_export">Export</string>
+	<string name="activity_name_import">My time Import</string>
+	<string name="share_project_report_label">Share Project Report</string>
+	<string name="share_project_button_label">Share</string>
+	<string name="share_project_period_label">Period</string>
+	<string name="share_project_include_week_totals_label">Include Week Totals</string>
+	<string name="share_project_include_month_totals_label">Include Month Totals</string>
+	<string name="share_project_group_by_day_label">Sum per Day</string>
+	<string name="share_period_this_month">This Month</string>
+	<string name="share_period_last_month">Last Month</string>
+	<string name="share_period_this_week">This Week</string>
+	<string name="share_period_last_week">Last Week</string>
+	<string name="share_period_all_sessions">All Sessions</string>
+	<string name="report_date_line_week">Week</string>
+	<string name="report_date_line_total">total</string>
+	<string name="share_error_message">Share error</string>
+	<string name="project_status_running">running</string>
+	<string name="alert_message_error">error</string>
+	<string name="alert_message_unknown_uri">Unknown URI</string>
+	<string name="about_subtitle">Minimalistic timesheet application.</string>
+	<string name="about_copyright">Copyright (c) 2010 Dag Rende</string>
+	<string name="about_license">Apache License, Version 2.0</string>
+	<string name="about_source_code_at">Source code at:</string>
+	<string name="about_source_code_url">http://code.google.com/p/android-my-time</string>
+	<string name="chinese_translation_by" >Chinese translation by </string>
+	<string name="chinese_translation_link">http://goapk.com</string>
+	<string name="chinese_translation_by_end"></string>
+</resources>
