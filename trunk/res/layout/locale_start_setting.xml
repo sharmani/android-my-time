@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+    <!-- At runtime, we'll load the Locale background frame -->
+    <LinearLayout
+	        android:id="@+id/frame"
+	        android:orientation="vertical"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:layout_margin="5px"
+	    	>
+	    <TextView android:text="@string/locale_setting_action_label" 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	    />
+        <Spinner android:id="@+id/locale_is_start"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="true"
+        />
+	    <TextView android:text="@string/locale_setting_project_label" 
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	    />
+        <Spinner android:id="@+id/locale_project"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawSelectorOnTop="true"
+        />
+    </LinearLayout>
+</LinearLayout>
