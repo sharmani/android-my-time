@@ -32,4 +32,8 @@ public interface Constants extends BaseColumns {
 			+ AUTHORITY + "/project");
 	public static final Uri CONTENT_URI_SESSION = Uri.parse("content://"
 			+ AUTHORITY + "/session");
+
+	public static final String INTENT_EXTRA_LOCALE_PROJECT_ID = "se.rende.mytime.locale.project_id";
+	public static final String INTENT_EXTRA_LOCALE_IS_START = "se.rende.mytime.locale.is_start";
+	public static final String INTENT_DB_UPDATE_ACTION = "se.rende.mytime.db_update_action";
 }

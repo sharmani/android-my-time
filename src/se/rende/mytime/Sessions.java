@@ -25,10 +25,12 @@ import java.util.Calendar;
 import java.util.TreeMap;
 
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -62,6 +64,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 	private TreeMap<Long, Float> monthTotals = new TreeMap<Long, Float>();
 	private TreeMap<Long, Float> weekTotals = new TreeMap<Long, Float>();
 	private DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
+	private IntentFilter dbUpdateFilter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +90,23 @@ public class Sessions extends ListActivity implements OnClickListener {
 		showSessions(getSessions(currentProjectId));
 
 		adjustButtonEnablement();
+		
+	    dbUpdateFilter = new IntentFilter(Constants.INTENT_DB_UPDATE_ACTION);
+		
 	}
 
 	@Override
 	protected void onResume() {
+		registerReceiver(dbUpdateReceiver, dbUpdateFilter);
 		super.onResume();
 		calculateTotals(this, currentProjectId, monthTotals, weekTotals);
+		adjustButtonEnablement();
+	}
+	
+	@Override
+	protected void onPause() {
+		unregisterReceiver(dbUpdateReceiver);
+		super.onPause();
 	}
 
 	/**
@@ -474,36 +488,15 @@ public class Sessions extends ListActivity implements OnClickListener {
 	private String projectName;
 
 	public void onClick(View v) {
-		Cursor cursor = null;
-		try {
 			switch (v.getId()) {
 			case R.id.StartButton:
-				// start a new session if not any session in progress
-				cursor = getContentResolver().query(CONTENT_URI_SESSION,
-						new String[] { "end" }, "end is null", null, null);
-				if (!cursor.moveToNext()) {
-					// did not find any session in progress for any project
-					ContentValues values = new ContentValues();
-					values.put("project_id", currentProjectId);
-					values.put("start", System.currentTimeMillis());
-					getContentResolver().insert(CONTENT_URI_SESSION, values);
+				if (startSession(this, currentProjectId)) {
 					startButton.setEnabled(false);
 					stopButton.setEnabled(true);
 				}
 				break;
-
 			case R.id.StopButton:
-				// end session in progress for this project, if any
-				cursor = getContentResolver().query(CONTENT_URI_SESSION,
-						new String[] { "_id" }, "project_id=? and end is null",
-						new String[] { "" + currentProjectId }, null);
-				while (cursor.moveToNext()) {
-					// found a session in progress
-					long sessionId = cursor.getLong(0);
-					ContentValues values = new ContentValues();
-					values.put("end", System.currentTimeMillis());
-					getContentResolver().update(CONTENT_URI_SESSION, values,
-							"_id=?", new String[] { "" + sessionId });
+				if (stopSession(this, currentProjectId)) {
 					startButton.setEnabled(true);
 					stopButton.setEnabled(false);
 
@@ -511,6 +504,26 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				break;
 			}
+	}
+
+	/**
+	 * start a new session if not any session in progress
+	 * @return 
+	 */
+	public static boolean startSession(Context context, long currentProjectId) {
+		Cursor cursor = null;
+		try {
+			cursor = context.getContentResolver().query(CONTENT_URI_SESSION,
+					new String[] { "end" }, "end is null", null, null);
+			if (!cursor.moveToNext()) {
+				// did not find any session in progress for any project
+				ContentValues values = new ContentValues();
+				values.put("project_id", currentProjectId);
+				values.put("start", System.currentTimeMillis());
+				context.getContentResolver().insert(CONTENT_URI_SESSION, values);
+				return true;
+			}
+			return false;
 		} finally {
 			if (cursor != null) {
 				cursor.close();
@@ -518,6 +531,33 @@ public class Sessions extends ListActivity implements OnClickListener {
 		}
 	}
 
+	/**
+	 *  end session in progress for this project, if any
+	 * @return
+	 */
+	public static boolean stopSession(Context context, long currentProjectId) {
+		Cursor cursor = null;
+		try {
+			cursor = context.getContentResolver().query(CONTENT_URI_SESSION,
+					new String[] { "_id" }, "project_id=? and end is null",
+					new String[] { "" + currentProjectId }, null);
+			while (cursor.moveToNext()) {
+				// found a session in progress
+				long sessionId = cursor.getLong(0);
+				ContentValues values = new ContentValues();
+				values.put("end", System.currentTimeMillis());
+				context.getContentResolver().update(CONTENT_URI_SESSION, values,
+						"_id=?", new String[] { "" + sessionId });
+				return true;
+			}
+			return false;
+		} finally {
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+	}
+	
 	/**
 	 * 
 	 */
@@ -537,4 +577,13 @@ public class Sessions extends ListActivity implements OnClickListener {
 			cursor.close();
 		}
 	}
+	
+	private BroadcastReceiver dbUpdateReceiver = new BroadcastReceiver() {
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+			adjustButtonEnablement();
+			calculateTotals(Sessions.this, currentProjectId, monthTotals, weekTotals);
+	    }
+	};
+
 }

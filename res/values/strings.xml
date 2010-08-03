@@ -81,4 +81,7 @@
 	<string name="chinese_translation_by" >Chinese translation by </string>
 	<string name="chinese_translation_link">http://goapk.com</string>
 	<string name="chinese_translation_by_end"></string>
+	<string name="mytime_project_id">My Time</string>
+	<string name="locale_setting_action_label">Action</string>
+	<string name="locale_setting_project_label">Project</string>
 </resources>

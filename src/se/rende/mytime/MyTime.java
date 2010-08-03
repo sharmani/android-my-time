@@ -26,11 +26,14 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.DialogInterface.OnClickListener;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ResolveInfo;
@@ -63,6 +66,8 @@ public class MyTime extends ListActivity {
 	private final ProjectListViewBinder viewBinder = new ProjectListViewBinder();
 	List<ResolveInfo> plugIns = new ArrayList<ResolveInfo>();
 	private GoogleAnalyticsTracker tracker = null;
+	private IntentFilter dbUpdateFilter;
+	private Cursor projectListCursor;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,8 +81,10 @@ public class MyTime extends ListActivity {
 	    setContentView(R.layout.main);
 		getListView().setOnCreateContextMenuListener(this);
 		runningProjectId = getRunningProjectId();
-		showProjects(getProjects());
+		projectListCursor = getProjects();
+		showProjects(projectListCursor);
         scanPlugIns();
+	    dbUpdateFilter = new IntentFilter(Constants.INTENT_DB_UPDATE_ACTION);
 	}
 	
 	@Override
@@ -184,9 +191,21 @@ public class MyTime extends ListActivity {
 	}
 
 	@Override
+	protected void onPause() {
+		unregisterReceiver(dbUpdateReceiver);
+		super.onPause();
+	}
+
+	@Override
 	protected void onResume() {
+		registerReceiver(dbUpdateReceiver, dbUpdateFilter);
+		refreshList();
 		super.onResume();
+	}
+
+	private void refreshList() {
 		runningProjectId = getRunningProjectId();
+		projectListCursor.requery();
 	}
 
 	public class ProjectListViewBinder implements
@@ -293,4 +312,12 @@ public class MyTime extends ListActivity {
 		getContentResolver().update(CONTENT_URI_PROJECT, values, "_id=?",
 				new String[] { "" + id });
 	}
+
+	
+	private BroadcastReceiver dbUpdateReceiver = new BroadcastReceiver() {
+	    @Override
+	    public void onReceive(Context context, Intent intent) {
+			refreshList();
+	    }
+	};
 }
