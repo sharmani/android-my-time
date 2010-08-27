@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<string name="h">h</string>
 	<string name="time_report">Time report</string>
 	<string name="no_projects">No Projects - Use Add Project menu</string>
