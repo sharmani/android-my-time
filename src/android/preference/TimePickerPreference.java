@@ -111,6 +111,7 @@ public class TimePickerPreference extends DialogPreference implements
 	protected void onDialogClosed(boolean positiveResult) {
 		super.onDialogClosed(positiveResult);
 		if (positiveResult) {
+			tp.clearFocus();	// to get value of number if edited in text field, and clicking OK without clicking outside the field first (bug in NumberPicker)
 			result = tp.getCurrentHour() + ":" + tp.getCurrentMinute();
 			persistString(result);
 			callChangeListener(result);
