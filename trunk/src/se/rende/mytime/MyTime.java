@@ -73,20 +73,18 @@ public class MyTime extends ListActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-	    tracker = GoogleAnalyticsTracker.getInstance();
-	    tracker.start("UA-17614355-1", this);
-	    tracker.trackPageView("/start");
-	    tracker.dispatch();
+	    setupGATracker();
 	    
 	    setContentView(R.layout.main);
 		getListView().setOnCreateContextMenuListener(this);
 		runningProjectId = getRunningProjectId();
 		projectListCursor = getProjects();
 		showProjects(projectListCursor);
-        scanPlugIns();
+
+		scanPlugIns();
 	    dbUpdateFilter = new IntentFilter(Constants.INTENT_DB_UPDATE_ACTION);
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -313,7 +311,13 @@ public class MyTime extends ListActivity {
 				new String[] { "" + id });
 	}
 
-	
+	private void setupGATracker() {
+		tracker = GoogleAnalyticsTracker.getInstance();
+	    tracker.start("UA-17614355-1", this);
+	    tracker.trackPageView("/start");
+	    tracker.dispatch();
+	}
+		
 	private BroadcastReceiver dbUpdateReceiver = new BroadcastReceiver() {
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
