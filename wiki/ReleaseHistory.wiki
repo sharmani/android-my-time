@@ -3,7 +3,7 @@
 
 = Releases =
 
-== Version 1.5 ==
+== Version 1.5 (not released yet) ==
  * Now works on telephones with small screens like HTC Wildfire and SonyEricsson X10 Mini
 
 == Version 1.4 ==
