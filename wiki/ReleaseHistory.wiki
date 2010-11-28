@@ -3,6 +3,9 @@
 
 = Releases =
 
+== Version 1.5 ==
+ * Now works on telephones with small screens like HTC Wildfire and SonyEricsson X10 Mini
+
 == Version 1.4 ==
  * Changed to black theme, changed some colors, and increased size of most texts.
  * Setting start date or time also sets end to the same value if they were the same before.
