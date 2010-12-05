@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<my-time-backup ver="1">
+  <project id="5" name="PID">
+    <session id="26" start="1270623881664" end="1270626853027" comment="" />
+    <session id="28" start="1270702267478" end="1270710032674" comment="relocation: test new servers" />
+    <session id="36" start="1270806418181" end="1270828239538" comment="relok: test" />
+    <session id="38" start="1271092507294" end="1271094066635" comment="" />
+    <session id="47" start="1271655857805" end="1271659623533" comment="reloc test, vista update" />
+    <session id="49" start="1271663750678" end="1271665071987" comment="reloc telco" />
+    <session id="55" start="1272002990150" end="1272005235645" comment="reloc test acc" />
+  </project>
+</my-time-backup>
