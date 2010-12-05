@@ -21,6 +21,7 @@ import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
 import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TreeMap;
 
@@ -54,6 +55,7 @@ import android.widget.TextView;
  * @author Dag Rende
  */
 public class Sessions extends ListActivity implements OnClickListener {
+	private static final SimpleDateFormat WEEKDAY_MONTHDAY_FORMAT = new java.text.SimpleDateFormat("E d");
 	private static final NumberFormat hoursFormat = NumberFormat.getInstance();
 	private static final String[] FROM = { "start", "end", "_id+5", "comment", "_id",
 			"_id+1", "_id+2", "_id+3", "_id+4" };
@@ -85,7 +87,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 		stopButton = findViewById(R.id.StopButton);
 		stopButton.setOnClickListener(this);
 
-		hoursFormat.setMaximumFractionDigits(5);
+		hoursFormat.setMaximumFractionDigits(2);
 
 		showSessions(getSessions(currentProjectId));
 
@@ -312,8 +314,10 @@ public class Sessions extends ListActivity implements OnClickListener {
 							timeView.setMaxHeight(0);
 						}
 					} else {
-						timeView.setText(DateFormat
-								.getDateFormat(Sessions.this).format(time)
+						Calendar cal = Calendar.getInstance();
+						cal.setTimeInMillis(time);
+
+						timeView.setText(WEEKDAY_MONTHDAY_FORMAT.format(time)
 								+ " "
 								+ DateFormat.getTimeFormat(Sessions.this)
 										.format(time));
@@ -333,11 +337,10 @@ public class Sessions extends ListActivity implements OnClickListener {
 					} else {
 						timeView.setVisibility(View.VISIBLE);
 						timeView.setMaxHeight(100);
-						timeView.setText(DateFormat.getDateFormat(
-								Sessions.this).format(time)
+						timeView.setText(
+								WEEKDAY_MONTHDAY_FORMAT.format(time)
 								+ " "
-								+ DateFormat.getTimeFormat(Sessions.this)
-										.format(time));
+								+ DateFormat.getTimeFormat(Sessions.this).format(time));
 					}
 				}
 				return true;
@@ -373,8 +376,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 					monthTotalLabelView
 							.setText(dateFormatSymbols.getMonths()[cal
 									.get(Calendar.MONTH)]
-									+ " "
-									+ getString(R.string.report_date_line_total)
+									+ " " + cal.get(Calendar.YEAR)
+									+ " " + getString(R.string.report_date_line_total)
 									+ ":");
 					monthTotalLabelView.setMaxHeight(1000);
 				} else {
