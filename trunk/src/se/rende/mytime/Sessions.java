@@ -23,6 +23,8 @@ import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.TreeMap;
 
 import android.app.ListActivity;
@@ -56,6 +58,8 @@ import android.widget.TextView;
  * @author Dag Rende
  */
 public class Sessions extends ListActivity implements OnClickListener {
+	private static final long DAY_MILLIS = 24L * 60L * 60L * 1000L;
+	private static final SimpleDateFormat MMdd_HHmm_FORMAT = new java.text.SimpleDateFormat("MM-dd_HH:mm");
 	private static final SimpleDateFormat WEEKDAY_MONTHDAY_FORMAT = new java.text.SimpleDateFormat("E d");
 	private static final NumberFormat hoursFormat = NumberFormat.getInstance();
 	private static final String[] FROM = { "start", "end", "_id+5", "comment", "_id",
@@ -65,7 +69,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 			R.id.week_total_label, R.id.week_total };
 	private long currentProjectId = 1;
 	private TreeMap<Long, Float> monthTotals = new TreeMap<Long, Float>();
+	private Set<String> monthTotalsMonths = new HashSet<String>();
 	private TreeMap<Long, Float> weekTotals = new TreeMap<Long, Float>();
+	private Set<String> weekTotalsWeeks = new HashSet<String>();
 	private DateFormatSymbols dateFormatSymbols = new DateFormatSymbols();
 	private IntentFilter dbUpdateFilter;
 
@@ -115,6 +121,130 @@ public class Sessions extends ListActivity implements OnClickListener {
 	}
 
 	/**
+	 * Calculates week and month totals around the supplied time.
+	 */
+	public void calculateWeekTotals(long time) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		String timeWeekKey = cal.get(Calendar.YEAR) + "-"
+				+ cal.get(Calendar.WEEK_OF_YEAR);
+		Log.d("Sessions.calculatePartialTotals", timeWeekKey + " " + MMdd_HHmm_FORMAT.format(time));
+//		Log.d("Sessions.calculatePartialTotals", "weekTotalsWeeks=" + weekTotalsWeeks);
+		if (!weekTotalsWeeks.contains(timeWeekKey)) {
+			int firstDayOfWeek = cal.getFirstDayOfWeek();
+			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+			cal.setTimeInMillis(time - (dayOfWeek - firstDayOfWeek) * DAY_MILLIS);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			long fromTime = cal.getTimeInMillis();
+			long toTime = fromTime + 7L * DAY_MILLIS;
+//			Log.d("Sessions.calculatePartialTotals sum week ", MMdd_HHmm_FORMAT.format(fromTime) + "-" + MMdd_HHmm_FORMAT.format(toTime));
+			Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
+				new String[] { "_id", "start", "end" },
+				"project_id=? and end is not null and start between ? and ?",
+				new String[] { Long.toString(currentProjectId), Long.toString(fromTime), Long.toString(toTime) }, "start desc");
+			
+			try {
+				String currentWeekKey = "";
+				float currentWeekTotal = 0f;
+				long firstSessionIdOfWeek = 0;
+				while (cursor.moveToNext()) {
+					// week
+					long sessionId = cursor.getLong(0);
+					long startTime = cursor.getLong(1);
+					long endTime = cursor.getLong(2);
+
+					cal.setTimeInMillis(startTime);
+					String weekKey = cal.get(Calendar.YEAR) + "-"
+							+ cal.get(Calendar.WEEK_OF_YEAR);
+
+					if (!currentWeekKey.equals(weekKey)) {
+						// beginning of a new week
+						if (currentWeekKey.length() > 0) {
+							weekTotals.put(firstSessionIdOfWeek,
+									currentWeekTotal);
+							weekTotalsWeeks.add(currentWeekKey);
+						}
+						currentWeekKey = weekKey;
+						currentWeekTotal = 0f;
+						firstSessionIdOfWeek = sessionId;
+					}
+					currentWeekTotal += getWorkHours(this, startTime,
+							endTime);
+				}
+				if (currentWeekKey.length() > 0) {
+					weekTotals.put(firstSessionIdOfWeek,
+							currentWeekTotal);
+					weekTotalsWeeks.add(currentWeekKey);
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+	}
+	
+	public void calculateMonthTotals(long time) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(time);
+		String timeMonthKey = cal.get(Calendar.YEAR) + "-"
+				+ cal.get(Calendar.MONTH);
+		if (!monthTotalsMonths.contains(timeMonthKey)) {
+			cal.set(Calendar.DAY_OF_MONTH, 0);
+			cal.set(Calendar.HOUR_OF_DAY, 0);
+			cal.set(Calendar.MINUTE, 0);
+			cal.set(Calendar.SECOND, 0);
+			cal.set(Calendar.MILLISECOND, 0);
+			long fromTime = cal.getTimeInMillis();
+			cal.add(Calendar.MONTH, 1);
+			long toTime = cal.getTimeInMillis();
+			Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
+				new String[] { "_id", "start", "end" },
+				"project_id=? and end is not null and start between ? and ?",
+				new String[] { Long.toString(currentProjectId), Long.toString(fromTime), Long.toString(toTime) }, "start desc");
+			
+			try {
+				String currentMonthKey = "";
+				float currentMonthTotal = 0f;
+				long firstSessionIdOfMonth = 0;
+				while (cursor.moveToNext()) {
+					// week
+					long sessionId = cursor.getLong(0);
+					long startTime = cursor.getLong(1);
+					long endTime = cursor.getLong(2);
+
+					cal.setTimeInMillis(startTime);
+					String monthKey = cal.get(Calendar.YEAR) + "-"
+							+ cal.get(Calendar.MONTH);
+
+					if (!currentMonthKey.equals(monthKey)) {
+						// beginning of a new month
+						if (currentMonthKey.length() > 0) {
+							monthTotals.put(firstSessionIdOfMonth,
+									currentMonthTotal);
+							monthTotalsMonths.add(currentMonthKey);
+						}
+						currentMonthKey = monthKey;
+						currentMonthTotal = 0f;
+						firstSessionIdOfMonth = sessionId;
+					}
+					currentMonthTotal += getWorkHours(this, startTime,
+							endTime);
+		
+				}
+				if (currentMonthKey.length() > 0) {
+					monthTotals.put(firstSessionIdOfMonth,
+							currentMonthTotal);
+					monthTotalsMonths.add(currentMonthKey);
+				}
+			} finally {
+				cursor.close();
+			}
+		}
+	}
+	
+	/**
 	 * Clear both totals and add each totals for this project keyed by the id of
 	 * the last session object for each period.
 	 * 
@@ -127,68 +257,69 @@ public class Sessions extends ListActivity implements OnClickListener {
 			TreeMap<Long, Float> weekTotals) {
 		long timeBefore = System.currentTimeMillis();
 
-		monthTotals.clear();
-		weekTotals.clear();
 		if (false) {
+			monthTotals.clear();
+			weekTotals.clear();
 			Cursor cursor = context.getContentResolver().query(
 					CONTENT_URI_SESSION,
 					new String[] { "_id", "start", "end" },
 					"project_id=? and end is not null",
 					new String[] { "" + projectId }, "start desc");
 			try {
-				String currentMonthKey = "";
-				float currentMonthTotal = 0f;
-				long firstSessionIdOfMonth = 0;
+				if (true) {
+					String currentMonthKey = "";
+					float currentMonthTotal = 0f;
+					long firstSessionIdOfMonth = 0;
+					String currentWeekKey = "";
+					float currentWeekTotal = 0f;
+					long firstSessionIdOfWeek = 0;
+					while (cursor.moveToNext()) {
+						// month
+						// week
+						long sessionId = cursor.getLong(0);
+						long startTime = cursor.getLong(1);
+						long endTime = cursor.getLong(2);
 
-				String currentWeekKey = "";
-				float currentWeekTotal = 0f;
-				long firstSessionIdOfWeek = 0;
+						Calendar cal = Calendar.getInstance();
+						cal.setTimeInMillis(startTime);
+						String monthKey = cal.get(Calendar.YEAR) + "-"
+								+ cal.get(Calendar.MONTH);
+						String weekKey = cal.get(Calendar.YEAR) + "-"
+								+ cal.get(Calendar.WEEK_OF_YEAR);
 
-				while (cursor.moveToNext()) {
-					// month
-					// week
-					long sessionId = cursor.getLong(0);
-					long startTime = cursor.getLong(1);
-					long endTime = cursor.getLong(2);
-
-					Calendar cal = Calendar.getInstance();
-					cal.setTimeInMillis(startTime);
-					String monthKey = cal.get(Calendar.YEAR) + "-"
-							+ cal.get(Calendar.MONTH);
-					String weekKey = cal.get(Calendar.YEAR) + "-"
-							+ cal.get(Calendar.WEEK_OF_YEAR);
-
-					if (!currentMonthKey.equals(monthKey)) {
-						// beginning of a new month
-						if (currentMonthKey.length() > 0) {
-							monthTotals.put(firstSessionIdOfMonth,
-									currentMonthTotal);
+						if (!currentMonthKey.equals(monthKey)) {
+							// beginning of a new month
+							if (currentMonthKey.length() > 0) {
+								monthTotals.put(firstSessionIdOfMonth,
+										currentMonthTotal);
+							}
+							currentMonthKey = monthKey;
+							currentMonthTotal = 0f;
+							firstSessionIdOfMonth = sessionId;
 						}
-						currentMonthKey = monthKey;
-						currentMonthTotal = 0f;
-						firstSessionIdOfMonth = sessionId;
-					}
-					currentMonthTotal += getWorkHours(context, startTime,
-							endTime);
+						currentMonthTotal += getWorkHours(context, startTime,
+								endTime);
 
-					if (!currentWeekKey.equals(weekKey)) {
-						// beginning of a new week
-						if (currentWeekKey.length() > 0) {
-							weekTotals.put(firstSessionIdOfWeek,
-									currentWeekTotal);
+						if (!currentWeekKey.equals(weekKey)) {
+							// beginning of a new week
+							if (currentWeekKey.length() > 0) {
+								weekTotals.put(firstSessionIdOfWeek,
+										currentWeekTotal);
+							}
+							currentWeekKey = weekKey;
+							currentWeekTotal = 0f;
+							firstSessionIdOfWeek = sessionId;
 						}
-						currentWeekKey = weekKey;
-						currentWeekTotal = 0f;
-						firstSessionIdOfWeek = sessionId;
+						currentWeekTotal += getWorkHours(context, startTime,
+								endTime);
 					}
-					currentWeekTotal += getWorkHours(context, startTime,
-							endTime);
-				}
-				if (currentMonthKey.length() > 0) {
-					monthTotals.put(firstSessionIdOfMonth, currentMonthTotal);
-				}
-				if (currentWeekKey.length() > 0) {
-					weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
+					if (currentMonthKey.length() > 0) {
+						monthTotals.put(firstSessionIdOfMonth,
+								currentMonthTotal);
+					}
+					if (currentWeekKey.length() > 0) {
+						weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
+					}
 				}
 			} finally {
 				cursor.close();
@@ -304,15 +435,23 @@ public class Sessions extends ListActivity implements OnClickListener {
 	public class SessionListViewBinder implements
 			SimpleCursorAdapter.ViewBinder {
 		Calendar cal = Calendar.getInstance();
-
+		
 		public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			if (columnIndex == 5 || columnIndex == 6 || columnIndex == 7 || columnIndex == 8) {
+				long start = cursor.getLong(0);
+				calculateWeekTotals(start);
+				calculateMonthTotals(start);
+			}
+			
 			if (columnIndex == 0 || columnIndex == 1) {
+				// start or end
 				TextView timeView = (TextView) view;
 				long time = cursor.getLong(columnIndex);
 				if (time == 0) {
 					timeView.setText(getString(R.string.project_status_running));
 				} else {
 					if (columnIndex == 1) {
+						// end
 						// check if from-to same date
 						if (isFromToSameDate(cursor)) {
 							// same date - display only time
@@ -326,6 +465,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 							timeView.setMaxHeight(0);
 						}
 					} else {
+						// start
 						Calendar cal = Calendar.getInstance();
 						cal.setTimeInMillis(time);
 
@@ -337,6 +477,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 2) {
+				// end if not same date
 				TextView timeView = (TextView) view;
 				long time = cursor.getLong(1);
 				if (time == 0) {
@@ -357,6 +498,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 3) {
+				// comment
 				TextView commentView = (TextView) view;
 				String comment = cursor.getString(columnIndex);
 				if (comment == null || comment.trim().length() == 0) {
@@ -369,6 +511,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 4) {
+				// hours
 				TextView hoursView = (TextView) view;
 				long startTime = cursor.getLong(0);
 				long endTime = cursor.getLong(1);
@@ -379,6 +522,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				hoursView.setText(hoursFormat.format(workHours) + getString(R.string.h));
 				return true;
 			} else if (columnIndex == 5) {
+				// month total label
 				TextView monthTotalLabelView = (TextView) view;
 				long id = cursor.getLong(4);
 				long start = cursor.getLong(0);
@@ -397,6 +541,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 6) {
+				// month total hours
 				TextView monthTotalView = (TextView) view;
 				long id = cursor.getLong(4);
 				Float total = monthTotals.get(id);
@@ -408,6 +553,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 7) {
+				// week total label
 				TextView weekTotalLabelView = (TextView) view;
 				long id = cursor.getLong(4);
 				long start = cursor.getLong(0);
@@ -425,6 +571,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 				}
 				return true;
 			} else if (columnIndex == 8) {
+				// week total hours
 				TextView weekTotalView = (TextView) view;
 				long id = cursor.getLong(4);
 				Float total = weekTotals.get(id);
