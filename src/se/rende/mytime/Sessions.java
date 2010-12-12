@@ -36,6 +36,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -70,6 +71,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		long timeBefore = System.currentTimeMillis();
 		super.onCreate(savedInstanceState);
 
 	    Uri intentData = getIntent().getData();
@@ -94,7 +96,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 		adjustButtonEnablement();
 		
 	    dbUpdateFilter = new IntentFilter(Constants.INTENT_DB_UPDATE_ACTION);
-		
+		Log.d("onCreate", "time=" + (System.currentTimeMillis() - timeBefore) + "ms");
+
 	}
 
 	@Override
@@ -122,67 +125,76 @@ public class Sessions extends ListActivity implements OnClickListener {
 	 */
 	public static void calculateTotals(Context context, long projectId, TreeMap<Long, Float> monthTotals,
 			TreeMap<Long, Float> weekTotals) {
+		long timeBefore = System.currentTimeMillis();
+
 		monthTotals.clear();
 		weekTotals.clear();
-		Cursor cursor = context.getContentResolver().query(CONTENT_URI_SESSION,
-				new String[] { "_id", "start", "end" },
-				"project_id=? and end is not null",
-				new String[] { "" + projectId }, "start desc");
-		try {
-			String currentMonthKey = "";
-			float currentMonthTotal = 0f;
-			long firstSessionIdOfMonth = 0;
+		if (false) {
+			Cursor cursor = context.getContentResolver().query(
+					CONTENT_URI_SESSION,
+					new String[] { "_id", "start", "end" },
+					"project_id=? and end is not null",
+					new String[] { "" + projectId }, "start desc");
+			try {
+				String currentMonthKey = "";
+				float currentMonthTotal = 0f;
+				long firstSessionIdOfMonth = 0;
 
-			String currentWeekKey = "";
-			float currentWeekTotal = 0f;
-			long firstSessionIdOfWeek = 0;
+				String currentWeekKey = "";
+				float currentWeekTotal = 0f;
+				long firstSessionIdOfWeek = 0;
 
-			while (cursor.moveToNext()) {
-				// month
-				// week
-				long sessionId = cursor.getLong(0);
-				long startTime = cursor.getLong(1);
-				long endTime = cursor.getLong(2);
+				while (cursor.moveToNext()) {
+					// month
+					// week
+					long sessionId = cursor.getLong(0);
+					long startTime = cursor.getLong(1);
+					long endTime = cursor.getLong(2);
 
-				Calendar cal = Calendar.getInstance();
-				cal.setTimeInMillis(startTime);
-				String monthKey = cal.get(Calendar.YEAR) + "-"
-						+ cal.get(Calendar.MONTH);
-				String weekKey = cal.get(Calendar.YEAR) + "-"
-						+ cal.get(Calendar.WEEK_OF_YEAR);
+					Calendar cal = Calendar.getInstance();
+					cal.setTimeInMillis(startTime);
+					String monthKey = cal.get(Calendar.YEAR) + "-"
+							+ cal.get(Calendar.MONTH);
+					String weekKey = cal.get(Calendar.YEAR) + "-"
+							+ cal.get(Calendar.WEEK_OF_YEAR);
 
-				if (!currentMonthKey.equals(monthKey)) {
-					// beginning of a new month
-					if (currentMonthKey.length() > 0) {
-						monthTotals.put(firstSessionIdOfMonth,
-								currentMonthTotal);
+					if (!currentMonthKey.equals(monthKey)) {
+						// beginning of a new month
+						if (currentMonthKey.length() > 0) {
+							monthTotals.put(firstSessionIdOfMonth,
+									currentMonthTotal);
+						}
+						currentMonthKey = monthKey;
+						currentMonthTotal = 0f;
+						firstSessionIdOfMonth = sessionId;
 					}
-					currentMonthKey = monthKey;
-					currentMonthTotal = 0f;
-					firstSessionIdOfMonth = sessionId;
-				}
-				currentMonthTotal += getWorkHours(context, startTime, endTime);
+					currentMonthTotal += getWorkHours(context, startTime,
+							endTime);
 
-				if (!currentWeekKey.equals(weekKey)) {
-					// beginning of a new week
-					if (currentWeekKey.length() > 0) {
-						weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
+					if (!currentWeekKey.equals(weekKey)) {
+						// beginning of a new week
+						if (currentWeekKey.length() > 0) {
+							weekTotals.put(firstSessionIdOfWeek,
+									currentWeekTotal);
+						}
+						currentWeekKey = weekKey;
+						currentWeekTotal = 0f;
+						firstSessionIdOfWeek = sessionId;
 					}
-					currentWeekKey = weekKey;
-					currentWeekTotal = 0f;
-					firstSessionIdOfWeek = sessionId;
+					currentWeekTotal += getWorkHours(context, startTime,
+							endTime);
 				}
-				currentWeekTotal += getWorkHours(context, startTime, endTime);
+				if (currentMonthKey.length() > 0) {
+					monthTotals.put(firstSessionIdOfMonth, currentMonthTotal);
+				}
+				if (currentWeekKey.length() > 0) {
+					weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
+				}
+			} finally {
+				cursor.close();
 			}
-			if (currentMonthKey.length() > 0) {
-				monthTotals.put(firstSessionIdOfMonth, currentMonthTotal);
-			}
-			if (currentWeekKey.length() > 0) {
-				weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
-			}
-		} finally {
-			cursor.close();
 		}
+		Log.d("calculateTotals", "time=" + (System.currentTimeMillis() - timeBefore) + "ms");
 	}
 
 	/**
