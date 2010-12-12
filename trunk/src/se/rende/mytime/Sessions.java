@@ -59,7 +59,6 @@ import android.widget.TextView;
  */
 public class Sessions extends ListActivity implements OnClickListener {
 	private static final long DAY_MILLIS = 24L * 60L * 60L * 1000L;
-	private static final SimpleDateFormat MMdd_HHmm_FORMAT = new java.text.SimpleDateFormat("MM-dd_HH:mm");
 	private static final SimpleDateFormat WEEKDAY_MONTHDAY_FORMAT = new java.text.SimpleDateFormat("E d");
 	private static final NumberFormat hoursFormat = NumberFormat.getInstance();
 	private static final String[] FROM = { "start", "end", "_id+5", "comment", "_id",
@@ -110,7 +109,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 	protected void onResume() {
 		registerReceiver(dbUpdateReceiver, dbUpdateFilter);
 		super.onResume();
-		calculateTotals(this, currentProjectId, monthTotals, weekTotals);
+		clearTotals();
 		adjustButtonEnablement();
 	}
 	
@@ -121,15 +120,24 @@ public class Sessions extends ListActivity implements OnClickListener {
 	}
 
 	/**
-	 * Calculates week and month totals around the supplied time.
+	 * Make week and month totals be recalculated next time sessions list is updated.
+	 */
+	private void clearTotals() {
+		monthTotals.clear();
+		monthTotalsMonths.clear();
+		weekTotals.clear();
+		weekTotalsWeeks.clear();
+	}
+
+	/**
+	 * Calculates week total for the week containing the specified time.
+	 * @param time millisecond time to calculate total for
 	 */
 	public void calculateWeekTotals(long time) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
 		String timeWeekKey = cal.get(Calendar.YEAR) + "-"
 				+ cal.get(Calendar.WEEK_OF_YEAR);
-		Log.d("Sessions.calculatePartialTotals", timeWeekKey + " " + MMdd_HHmm_FORMAT.format(time));
-//		Log.d("Sessions.calculatePartialTotals", "weekTotalsWeeks=" + weekTotalsWeeks);
 		if (!weekTotalsWeeks.contains(timeWeekKey)) {
 			int firstDayOfWeek = cal.getFirstDayOfWeek();
 			int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
@@ -140,7 +148,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 			cal.set(Calendar.MILLISECOND, 0);
 			long fromTime = cal.getTimeInMillis();
 			long toTime = fromTime + 7L * DAY_MILLIS;
-//			Log.d("Sessions.calculatePartialTotals sum week ", MMdd_HHmm_FORMAT.format(fromTime) + "-" + MMdd_HHmm_FORMAT.format(toTime));
 			Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "_id", "start", "end" },
 				"project_id=? and end is not null and start between ? and ?",
@@ -185,13 +192,17 @@ public class Sessions extends ListActivity implements OnClickListener {
 		}
 	}
 	
+	/**
+	 * Calculates week total for the week containing the specified time.
+	 * @param time millisecond time to calculate total for
+	 */
 	public void calculateMonthTotals(long time) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(time);
 		String timeMonthKey = cal.get(Calendar.YEAR) + "-"
 				+ cal.get(Calendar.MONTH);
 		if (!monthTotalsMonths.contains(timeMonthKey)) {
-			cal.set(Calendar.DAY_OF_MONTH, 0);
+			cal.set(Calendar.DAY_OF_MONTH, 1);
 			cal.set(Calendar.HOUR_OF_DAY, 0);
 			cal.set(Calendar.MINUTE, 0);
 			cal.set(Calendar.SECOND, 0);
@@ -255,77 +266,72 @@ public class Sessions extends ListActivity implements OnClickListener {
 	 */
 	public static void calculateTotals(Context context, long projectId, TreeMap<Long, Float> monthTotals,
 			TreeMap<Long, Float> weekTotals) {
-		long timeBefore = System.currentTimeMillis();
+		monthTotals.clear();
+		weekTotals.clear();
+		Cursor cursor = context.getContentResolver().query(
+				CONTENT_URI_SESSION,
+				new String[] { "_id", "start", "end" },
+				"project_id=? and end is not null",
+				new String[] { "" + projectId }, "start desc");
+		try {
+			if (true) {
+				String currentMonthKey = "";
+				float currentMonthTotal = 0f;
+				long firstSessionIdOfMonth = 0;
+				String currentWeekKey = "";
+				float currentWeekTotal = 0f;
+				long firstSessionIdOfWeek = 0;
+				while (cursor.moveToNext()) {
+					// month
+					// week
+					long sessionId = cursor.getLong(0);
+					long startTime = cursor.getLong(1);
+					long endTime = cursor.getLong(2);
 
-		if (false) {
-			monthTotals.clear();
-			weekTotals.clear();
-			Cursor cursor = context.getContentResolver().query(
-					CONTENT_URI_SESSION,
-					new String[] { "_id", "start", "end" },
-					"project_id=? and end is not null",
-					new String[] { "" + projectId }, "start desc");
-			try {
-				if (true) {
-					String currentMonthKey = "";
-					float currentMonthTotal = 0f;
-					long firstSessionIdOfMonth = 0;
-					String currentWeekKey = "";
-					float currentWeekTotal = 0f;
-					long firstSessionIdOfWeek = 0;
-					while (cursor.moveToNext()) {
-						// month
-						// week
-						long sessionId = cursor.getLong(0);
-						long startTime = cursor.getLong(1);
-						long endTime = cursor.getLong(2);
+					Calendar cal = Calendar.getInstance();
+					cal.setTimeInMillis(startTime);
+					String monthKey = cal.get(Calendar.YEAR) + "-"
+							+ cal.get(Calendar.MONTH);
+					String weekKey = cal.get(Calendar.YEAR) + "-"
+							+ cal.get(Calendar.WEEK_OF_YEAR);
 
-						Calendar cal = Calendar.getInstance();
-						cal.setTimeInMillis(startTime);
-						String monthKey = cal.get(Calendar.YEAR) + "-"
-								+ cal.get(Calendar.MONTH);
-						String weekKey = cal.get(Calendar.YEAR) + "-"
-								+ cal.get(Calendar.WEEK_OF_YEAR);
-
-						if (!currentMonthKey.equals(monthKey)) {
-							// beginning of a new month
-							if (currentMonthKey.length() > 0) {
-								monthTotals.put(firstSessionIdOfMonth,
-										currentMonthTotal);
-							}
-							currentMonthKey = monthKey;
-							currentMonthTotal = 0f;
-							firstSessionIdOfMonth = sessionId;
+					if (!currentMonthKey.equals(monthKey)) {
+						// beginning of a new month
+						if (currentMonthKey.length() > 0) {
+							monthTotals.put(firstSessionIdOfMonth,
+									currentMonthTotal);
 						}
-						currentMonthTotal += getWorkHours(context, startTime,
-								endTime);
+						currentMonthKey = monthKey;
+						currentMonthTotal = 0f;
+						firstSessionIdOfMonth = sessionId;
+					}
+					currentMonthTotal += getWorkHours(context, startTime,
+							endTime);
 
-						if (!currentWeekKey.equals(weekKey)) {
-							// beginning of a new week
-							if (currentWeekKey.length() > 0) {
-								weekTotals.put(firstSessionIdOfWeek,
-										currentWeekTotal);
-							}
-							currentWeekKey = weekKey;
-							currentWeekTotal = 0f;
-							firstSessionIdOfWeek = sessionId;
+					if (!currentWeekKey.equals(weekKey)) {
+						// beginning of a new week
+						if (currentWeekKey.length() > 0) {
+							weekTotals.put(firstSessionIdOfWeek,
+									currentWeekTotal);
 						}
-						currentWeekTotal += getWorkHours(context, startTime,
-								endTime);
+						currentWeekKey = weekKey;
+						currentWeekTotal = 0f;
+						firstSessionIdOfWeek = sessionId;
 					}
-					if (currentMonthKey.length() > 0) {
-						monthTotals.put(firstSessionIdOfMonth,
-								currentMonthTotal);
-					}
-					if (currentWeekKey.length() > 0) {
-						weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
-					}
+					currentWeekTotal += getWorkHours(context, startTime,
+							endTime);
 				}
-			} finally {
-				cursor.close();
+				if (currentMonthKey.length() > 0) {
+					monthTotals.put(firstSessionIdOfMonth,
+							currentMonthTotal);
+				}
+				if (currentWeekKey.length() > 0) {
+					weekTotals.put(firstSessionIdOfWeek, currentWeekTotal);
+				}
 			}
+		} finally {
+			cursor.close();
 		}
-		Log.d("calculateTotals", "time=" + (System.currentTimeMillis() - timeBefore) + "ms");
 	}
 
 	/**
@@ -429,7 +435,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 		getContentResolver().delete(CONTENT_URI_SESSION, "_id=?",
 				new String[] { "" + id });
 		adjustButtonEnablement();
-		calculateTotals(this, currentProjectId, monthTotals, weekTotals);
+		clearTotals();
 	}
 
 	public class SessionListViewBinder implements
@@ -662,7 +668,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 					startButton.setEnabled(true);
 					stopButton.setEnabled(false);
 
-					calculateTotals(this, currentProjectId, monthTotals, weekTotals);
+					clearTotals();
 				}
 				break;
 			}
@@ -744,7 +750,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 	    @Override
 	    public void onReceive(Context context, Intent intent) {
 			adjustButtonEnablement();
-			calculateTotals(Sessions.this, currentProjectId, monthTotals, weekTotals);
+			clearTotals();
 	    }
 	};
 
