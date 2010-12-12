@@ -5,6 +5,8 @@
 
 == Version 1.5 (not released yet) ==
  * Now works on telephones with small screens like HTC Wildfire and !SonyEricsson X10 Mini
+ * Tighter layout of sessions list with only week day and day of month in lite item and year moved up to month total line
+ * Faster open of session list when clicking a project
 
 == Version 1.4 ==
  * Changed to black theme, changed some colors, and increased size of most texts.
