@@ -76,8 +76,9 @@
 	<string name="about_subtitle">Minimalistic timesheet application.</string>
 	<string name="about_copyright">Copyright (c) 2010 Dag Rende</string>
 	<string name="about_license">Apache License, Version 2.0</string>
-	<string name="about_source_code_at">Source code at:</string>
+	<string name="about_source_code_at">Discuss features and issues at:</string>
 	<string name="about_source_code_url">http://code.google.com/p/android-my-time</string>
+	<string name="about_forum_url">https://groups.google.com/forum/m/#forum/my-time-for-android</string>
 	<string name="chinese_translation_by" >Chinese translation by </string>
 	<string name="chinese_translation_link">http://goapk.com</string>
 	<string name="chinese_translation_by_end"></string>
