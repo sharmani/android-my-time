@@ -10,7 +10,7 @@ The program can be downloaded from Android Market under the name *My Time*.
 
 === Main Page - Projects ===
 
-||http://android-my-time.googlecode.com/svn/wiki/images/projects.png||
+||<img src="http://android-my-time.googlecode.com/svn/wiki/images/projects.png" width="300"/>||
 
 Displays the list of projects to report time for.
 
@@ -25,7 +25,7 @@ Displays the list of projects to report time for.
 
 === Sessions page ===
 
-||http://android-my-time.googlecode.com/svn/wiki/images/sessions.png||
+||<img src="http://android-my-time.googlecode.com/svn/wiki/images/sessions.png" width="300"/>||
 
 Lists the sessions for a project. The times are summed to months and weeks (obeying the week numbering rules of the current locale).
 
