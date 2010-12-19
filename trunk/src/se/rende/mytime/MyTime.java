@@ -22,8 +22,6 @@ import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
@@ -32,26 +30,36 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.DialogInterface.OnClickListener;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.AdapterView.AdapterContextMenuInfo;
+import android.widget.Toast;
+
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 /**
  * Timesheet application for android. 
@@ -72,8 +80,58 @@ public class MyTime extends ListActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+		tracker = GoogleAnalyticsTracker.getInstance();
+		tracker.start("UA-17614355-1", 300, this);
 		
-	    setupGATracker();
+		int versionCode = -1;
+		String versionName = "";
+		try {
+			PackageInfo packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			versionCode = packageInfo.versionCode;
+			versionName  = packageInfo.versionName;
+		} catch (NameNotFoundException e) {
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG);
+			Log.d(getClass().getSimpleName(), "get package info error", e);
+		}
+
+		Editor edit = prefs.edit();
+		
+		if (false) {
+			// simulate app updated
+			edit.putInt("lastVersionCode", 5);
+			edit.commit();
+		}
+		int lastVersionCode = prefs.getInt("lastVersionCode", -1);
+		if (lastVersionCode == -1) {
+			tracker.setCustomVar(1, "app_type", "free", 1);
+			tracker.setCustomVar(2, "phone_manufacturer", Build.MANUFACTURER, 1);
+			tracker.setCustomVar(3, "phone_model", Build.MODEL, 1);
+			Log.d(getClass().getSimpleName(), "first start");
+		} else if (versionCode != -1 && lastVersionCode != versionCode) {
+			// show version info
+			Log.d(getClass().getSimpleName(), "new version");
+			new AlertDialog.Builder(this)
+					.setTitle(R.string.new_app_version_title)
+					.setMessage(R.string.new_app_version_description)
+					.setPositiveButton("OK", null).show();
+			tracker.setCustomVar(4, "app version", versionName, 1);
+			Log.d(getClass().getSimpleName(), "after new version info dialog");
+		}
+		edit.putInt("lastVersionCode", versionCode);
+		
+		String lastOSRelease = prefs.getString("lastOSRelease", "");
+		if (lastOSRelease != null && !lastOSRelease.equals(Build.VERSION.RELEASE)) {
+			tracker.setCustomVar(4, "os_rel", Build.VERSION.RELEASE, 1);
+			edit.putString("os_rel", Build.VERSION.RELEASE);
+			Log.d(getClass().getSimpleName(), "new os version");
+		}
+		boolean commit = edit.commit();
+		Log.d(getClass().getSimpleName(), "edit.commit()=" + commit);
+		
+		tracker.trackPageView("/start");
+	    
 	    
 	    setContentView(R.layout.main);
 		getListView().setOnCreateContextMenuListener(this);
@@ -311,13 +369,6 @@ public class MyTime extends ListActivity {
 				new String[] { "" + id });
 	}
 
-	private void setupGATracker() {
-		tracker = GoogleAnalyticsTracker.getInstance();
-	    tracker.start("UA-17614355-1", this);
-	    tracker.trackPageView("/start");
-	    tracker.dispatch();
-	}
-		
 	private BroadcastReceiver dbUpdateReceiver = new BroadcastReceiver() {
 	    @Override
 	    public void onReceive(Context context, Intent intent) {

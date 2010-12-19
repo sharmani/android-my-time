@@ -85,4 +85,10 @@
 	<string name="mytime_project_id">My Time</string>
 	<string name="locale_setting_action_label">Action</string>
 	<string name="locale_setting_project_label">Project</string>
+	<string name="new_app_version_title">New version</string>
+	<string name="new_app_version_description">
+		&#x2022; Faster project open
+		\n&#x2022; Weekday and date instead of year-month-date in sessions list item
+		\n&#x2022; Forum link from About box
+		</string>
 </resources>
