@@ -35,7 +35,7 @@ import android.widget.TextView;
  * @author Dag Rende
  */
 public class About extends Activity { 
-	@Override 
+	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);

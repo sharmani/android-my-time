@@ -146,7 +146,7 @@ public class Settings extends PreferenceActivity {
 			}
 		}
 	}
-
+	
 	/**
 	 * True when user wants lunch time to be excluded from the work hours
 	 * calculated for each session.
