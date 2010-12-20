@@ -102,7 +102,7 @@ public class Importer extends Activity {
 		int eventType = parser.getEventType();
 		if (eventType == XmlPullParser.START_TAG) {
 			
-			String documentTag = "my-time-backup";
+			String documentTag = "my-time-database";
 			if (!documentTag.equals(parser.getName())) {
 				throw new DatabaseSyntaxError("invalid document element '" + parser.getName() + "', should be '" + documentTag + "'");
 			}
@@ -116,7 +116,7 @@ public class Importer extends Activity {
 						&& "project".equals(parser.getName())) {
 					parseProjectElement(parser, ib);
 				} else if (parser.getEventType() == XmlPullParser.END_TAG
-						&& "my-time-backup".equals(parser.getName())) {
+						&& "my-time-database".equals(parser.getName())) {
 					break;
 				} else if (parser.getEventType() == XmlPullParser.TEXT) {
 				} else {
