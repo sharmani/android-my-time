@@ -98,18 +98,14 @@ public class MyTime extends ListActivity {
 
 		Editor edit = prefs.edit();
 		
-		if (false) {
-			// simulate app updated
-			edit.putInt("lastVersionCode", 5);
-			edit.commit();
-		}
 		int lastVersionCode = prefs.getInt("lastVersionCode", -1);
-		if (lastVersionCode == -1) {
-			tracker.setCustomVar(1, "app_type", "free", 1);
-			tracker.setCustomVar(2, "phone_manufacturer", Build.MANUFACTURER, 1);
-			tracker.setCustomVar(3, "phone_model", Build.MODEL, 1);
-			Log.d(getClass().getSimpleName(), "first start");
-		} else if (versionCode != -1 && lastVersionCode != versionCode) {
+		if (lastVersionCode != versionCode) {
+			if (lastVersionCode == -1) {
+				Log.d(getClass().getSimpleName(), "first start");
+				tracker.setCustomVar(1, "app_type", "free", 1);
+				tracker.setCustomVar(2, "phone_manufacturer", Build.MANUFACTURER, 1);
+				tracker.setCustomVar(3, "phone_model", Build.MODEL, 1);
+			}
 			// show version info
 			Log.d(getClass().getSimpleName(), "new version");
 			new AlertDialog.Builder(this)
@@ -117,18 +113,16 @@ public class MyTime extends ListActivity {
 					.setMessage(R.string.new_app_version_description)
 					.setPositiveButton("OK", null).show();
 			tracker.setCustomVar(4, "app version", versionName, 1);
-			Log.d(getClass().getSimpleName(), "after new version info dialog");
+			edit.putInt("lastVersionCode", versionCode);
+			edit.commit();
 		}
-		edit.putInt("lastVersionCode", versionCode);
 		
 		String lastOSRelease = prefs.getString("lastOSRelease", "");
-		if (lastOSRelease != null && !lastOSRelease.equals(Build.VERSION.RELEASE)) {
+		if (!lastOSRelease.equals(Build.VERSION.RELEASE)) {
 			tracker.setCustomVar(4, "os_rel", Build.VERSION.RELEASE, 1);
 			edit.putString("os_rel", Build.VERSION.RELEASE);
-			Log.d(getClass().getSimpleName(), "new os version");
+			edit.commit();
 		}
-		boolean commit = edit.commit();
-		Log.d(getClass().getSimpleName(), "edit.commit()=" + commit);
 		
 		tracker.trackPageView("/start");
 	    
