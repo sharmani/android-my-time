@@ -40,7 +40,7 @@ public class DatabaseImportBuilder implements ImportBuilder {
 	public long createProject(String projectName) {
 		Log.d("MyTimeLoggingImportBuilder", "MyTimeLoggingImportBuilder.createProject(" + projectName + ")");
 		ContentValues values = new ContentValues();
-		values.put("name", projectName);
+		values.put("name", "imported " + projectName);
 		Uri newProject = contentResolver.insert(CONTENT_URI_PROJECT, values);
 		Cursor cursor = contentResolver.query(newProject, new String[] {"_id"}, null, null, null);
 		if (cursor.moveToNext()) {
