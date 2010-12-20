@@ -55,7 +55,7 @@ public class BackupFormatter {
         serializer.startDocument("UTF-8", true);
         serializer.text("\n");
         serializer.startTag("", "my-time-database");
-        serializer.attribute("", "format-version", "1");
+        serializer.attribute("", "ver", "1");
         serializer.text("\n");
 		Cursor cursor = null;
 		try {
@@ -98,7 +98,7 @@ public class BackupFormatter {
 			    serializer.endTag("", "project");
 			    serializer.text("\n");
 			}
-			serializer.endTag("", "my-time-backup");
+			serializer.endTag("", "my-time-database");
 			serializer.text("\n");
 			serializer.endDocument();
 		} finally {

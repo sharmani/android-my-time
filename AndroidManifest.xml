@@ -10,6 +10,7 @@
                 <category android:name="se.rende.mytime.PLUGIN" />
             </intent-filter>
         </activity>
+
         <activity android:name=".Importer"
                   android:label="@string/activity_name_import">
             <intent-filter>
@@ -22,6 +23,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
         </activity>
+
     </application>
     <uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
