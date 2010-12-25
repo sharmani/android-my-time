@@ -66,6 +66,8 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 	private TextView projectNameView;
 	private GoogleAnalyticsTracker tracker;
 	private List<String> suggestionList = new ArrayList<String>();
+	private Button cancelButton;
+	private Button okButton;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +91,11 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 		endTimeView.setOnClickListener(this);
 		commentView = (AutoCompleteTextView) findViewById(R.id.SessionCommentEditText);
 		commentView.setOnItemClickListener(this);
-		
+		okButton = (Button) findViewById(R.id.session_ok);
+		okButton.setOnClickListener(this);
+		cancelButton = (Button) findViewById(R.id.session_cancel);
+		cancelButton.setOnClickListener(this);
+
 		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
 				new String[] { "start", "end", "comment", "project_id" }, "_id=?",
 				new String[] { "" + currentSessionId }, null);
@@ -176,7 +182,6 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 	@Override
 	protected void onPause() {
 		super.onPause();
-		saveSession();
 	}
 	
 	private String getProjectName(long projectId) {
@@ -238,6 +243,11 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 			cal.setTimeInMillis(endDateTime);
 			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(false), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), DateFormat.is24HourFormat(this));
 			timePickerDialog.show();
+		} else if (v == okButton) {
+			saveSession();
+			finish();
+		} else if (v == cancelButton) {
+			finish();
 		}
 	}
 	
