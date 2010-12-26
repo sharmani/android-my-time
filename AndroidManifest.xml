@@ -14,14 +14,14 @@
         <activity android:name=".Importer"
                   android:label="@string/activity_name_import">
             <intent-filter>
-                <category android:name="android.intent.category.DEFAULT" />
-                <action android:name="android.intent.action.VIEW" />
-                <data android:mimeType="text/xml" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="se.rende.mytime.PLUGIN" />
             </intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
+<!--            <intent-filter>-->
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--                <action android:name="android.intent.action.VIEW" />-->
+<!--                <data android:mimeType="text/xml" />-->
+<!--            </intent-filter>-->
         </activity>
 
     </application>

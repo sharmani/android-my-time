@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">My Time Export</string>
+    <string name="app_name">My Time Export to SD card</string>
 	<string name="export_title">Export all time reports</string>
-<string name="activity_name_import">Import My time Projects</string>
+<string name="activity_name_import">My Time Import from SD card</string>
 </resources>
