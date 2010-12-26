@@ -17,7 +17,7 @@
 		android:gravity="center" android:paddingBottom="10dip"/>
 	
 	<TextView android:layout_width="fill_parent"
-		android:layout_height="wrap_content" android:text="@string/about_source_code_at"
+		android:layout_height="wrap_content" android:text="@string/about_forum_at"
 		android:gravity="center" android:textSize="12sp"/>
 	<TextView android:layout_width="fill_parent"
 		android:layout_height="wrap_content"

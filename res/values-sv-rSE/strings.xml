@@ -76,8 +76,7 @@
 	<string name="about_subtitle">Minimalistiskt tidrapport-program.</string>
 	<string name="about_copyright">Copyright (c) 2010 Dag Rende</string>
 	<string name="about_license">Apache License, Version 2.0</string>
-	<string name="about_source_code_at">Diskutera möjligheter och problem på:</string>
-	<string name="about_source_code_url">http://code.google.com/p/android-my-time</string>
+	<string name="about_forum_at">Diskutera möjligheter och problem på:</string>
 	<string name="about_forum_url">https://groups.google.com/forum/m/#forum/my-time-for-android</string>
 	<string name="chinese_translation_by" >Kinesisk översättning av </string>
 	<string name="chinese_translation_link">http://goapk.com</string>

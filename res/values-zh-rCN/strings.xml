@@ -76,9 +76,23 @@
 	<string name="about_subtitle">简约工作表程序</string>
 	<string name="about_copyright">版权所有 (c) 2010 Dag Rende</string>
 	<string name="about_license">Apache 许可协议，2.0 版本</string>
-	<string name="about_source_code_at">源码位于：</string>
-	<string name="about_source_code_url">http://code.google.com/p/android-my-time</string>
+	<string name="about_forum_at">Discuss features and issues at:</string>
+	<string name="about_forum_url">https://groups.google.com/forum/m/#forum/my-time-for-android</string>
 	<string name="chinese_translation_by">安智网汉化（</string>
 	<string name="chinese_translation_link">http://goapk.com</string>
 	<string name="chinese_translation_by_end">）</string>
+	<string name="mytime_project_id">My Time</string>
+	<string name="locale_setting_action_label">Action</string>
+	<string name="locale_setting_project_label">Project</string>
+	<string name="new_app_version_title">New version</string>
+	<string name="done_button_label">Done</string>
+	<string name="discard_button_label">Discard</string>
+	<string name="new_app_version_description">
+		&#x2022; Faster project open
+		\n&#x2022; Weekday and date instead of year-month-date in sessions list item
+		\n&#x2022; Forum link from About box
+		\n&#x2022; Done/Discard-button in Session page
+		\n&#x2022; No session is created on Discard after Add Session
+		\n&#x2022; Running hours updated on off-on when Sessions is open
+	</string>
 </resources>
