@@ -17,18 +17,23 @@ package se.rende.mytime.export;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.util.Xml;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 
 /**
  * Import an exported file.
@@ -46,7 +51,10 @@ import android.util.Xml;
  * 
  * @author Dag Rende
  */
-public class Importer extends Activity {
+public class Importer extends ListActivity {
+	private String[] fileList;
+	private File fileDirectory;
+
 	/* (non-Javadoc)
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
@@ -64,20 +72,25 @@ public class Importer extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.importer);
+		
+		fileDirectory = Environment.getExternalStorageDirectory();
+		fileList = fileDirectory.list(new ExportFileFilter());
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, R.layout.file_list_item, R.id.name, fileList);
+		setListAdapter(arrayAdapter);
+	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		performImport(new File(fileDirectory, fileList[position]));
+	}
+
+	private void performImport(File filePath) {
 		InputStream is = null;
 		try {
-		String scheme = getIntent().getScheme();
-		if (scheme != null && scheme.equals("content")) {
-				is = getContentResolver().openInputStream(getIntent().getData());
-		} else {
-			// assume we started from home page
-			File backupFile = new File(Environment
-					.getExternalStorageDirectory(), "my-time-export.xml");
-			is = new FileInputStream(backupFile);
-		}
-		
-		ImportBuilder ib = new DatabaseImportBuilder(getContentResolver());
-		importFromStream(is, ib);
+			is = new FileInputStream(filePath);
+			ImportBuilder ib = new DatabaseImportBuilder(getContentResolver());
+			importFromStream(is, ib);
 		} catch (Exception e) {
 			new AlertDialog.Builder(this)
 			.setMessage("Import error " + e)
@@ -91,6 +104,7 @@ public class Importer extends Activity {
 				}
 			}
 		}
+		finish();
 	}
 
 	public void importFromStream(InputStream is, ImportBuilder ib) throws XmlPullParserException,
@@ -158,4 +172,12 @@ public class Importer extends Activity {
 		ib.createSession(projectId, startTime, endTime, comment);
 		parser.next();
 	}
+
+	private final class ExportFileFilter implements FilenameFilter {
+		@Override
+		public boolean accept(File dir, String filename) {
+			return filename.startsWith("My Time export") && filename.endsWith(".xml");
+		}
+	}
 }
+
