@@ -47,7 +47,7 @@
 	<string name="pref_share_project_include_month_totals_key">share_project_include_month_totals</string>
 	<string name="pref_share_project_group_by_day_key">share_project_group_by_day</string>
 	<string name="total_label">totalt</string>
-	<string name="hour_abbrev"> tim</string>
+	<string name="hour_abbrev">tim</string>
 	<string name="share_subject">My Time-rapport</string>
 	<string name="share_title">Skicka tidrapport</string>
 	<string name="export_title">Exportera alla tidrapporter</string>
@@ -85,7 +85,7 @@
 	<string name="mytime_project_id">My Time</string>
 	<string name="locale_setting_action_label">Action</string>
 	<string name="locale_setting_project_label">Project</string>
-	<string name="new_app_version_title">New version</string>
+	<string name="new_app_version_title">Ny version</string>
 	<string name="done_button_label">Färdig</string>
 	<string name="discard_button_label">Tillbaka</string>
 	<string name="new_app_version_description">
@@ -93,5 +93,7 @@
 		\n&#x2022; Veckodag och datum istället för år-månad-dag på sessionsrader
 		\n&#x2022; Forumlänk i Om-sidan
 		\n&#x2022; Färdig/Tillbaka-knapp i sessions-sidan
+		\n&#x2022; Ingen session skapas vid Tillbaka efter Ny session
+		\n&#x2022; Pågående tid uppdateras vid av-på med Sessioner öppen
 		</string>
 </resources>
