@@ -93,5 +93,7 @@
 		\n&#x2022; Weekday and date instead of year-month-date in sessions list item
 		\n&#x2022; Forum link from About box
 		\n&#x2022; Done/Discard-button in Session page
+		\n&#x2022; No session is created on Discard after Add Session
+		\n&#x2022; Running hours updated on off-on when Sessions is open
 		</string>
 </resources>

@@ -111,12 +111,17 @@ public class Sessions extends ListActivity implements OnClickListener {
 		super.onResume();
 		clearTotals();
 		adjustButtonEnablement();
+		
+		showSessions(getSessions(currentProjectId));
+
+		Log.d(getClass().getSimpleName(), "onResume");
 	}
 	
 	@Override
 	protected void onPause() {
 		unregisterReceiver(dbUpdateReceiver);
 		super.onPause();
+		Log.d(getClass().getSimpleName(), "onPause");
 	}
 
 	/**
@@ -382,11 +387,17 @@ public class Sessions extends ListActivity implements OnClickListener {
 	}
 
 	/**
-	 * 
+	 * Start session activity with the session id, to let user change it
+	 * @param sessionId id of session to edit
 	 */
+	private void editSession(long sessionId) {
+		Intent intent = new Intent(this, Session.class);
+		intent.setData(ContentUris.withAppendedId(CONTENT_URI_SESSION, sessionId));
+		startActivity(intent);
+	}
 
 	/**
-	 * 
+	 * start the session activity with the project id, to let user create a new session
 	 */
 	private void addSession() {
 		Intent intent = new Intent(this, Session.class);
@@ -418,9 +429,7 @@ public class Sessions extends ListActivity implements OnClickListener {
 	@Override
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent intent = new Intent(this, Session.class);
-		intent.setData(ContentUris.withAppendedId(CONTENT_URI_SESSION, id));
-		startActivity(intent);
+		editSession(id);
 	}
 
 	private void deleteSession(long id) {
