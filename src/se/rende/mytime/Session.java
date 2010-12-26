@@ -32,6 +32,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -51,7 +52,8 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
  * @author Dag Rende
  */
 public class Session extends Activity implements OnClickListener, OnItemClickListener {
-	private long currentSessionId;
+	private long currentProjectId;
+	private Long currentSessionId = null;	// null used when no session created yet
 	private AutoCompleteTextView commentView;
 	private boolean isRunning;
 	private Button startDateView;
@@ -61,7 +63,6 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 	private long startDateTime;
 	private long endDateTime;
 	private String comment;
-	private long currentProjectId;
 	private String projectName;
 	private TextView projectNameView;
 	private GoogleAnalyticsTracker tracker;
@@ -77,7 +78,14 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 	    tracker.start("UA-17614355-1", this);
 
 		Uri intentData = getIntent().getData();
-		currentSessionId = Long.parseLong(intentData.getLastPathSegment());
+		if (intentData.getPath().startsWith("/session")) {
+			currentSessionId = new Long(intentData.getLastPathSegment());
+		} else {
+			currentProjectId = Long.parseLong(intentData.getLastPathSegment());
+		}
+		
+		Log.d("Session", "path=" + intentData.getPath());
+		
 		setContentView(R.layout.session);
 
 		projectNameView = (TextView) findViewById(R.id.sessionProjectName);
@@ -96,22 +104,30 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 		cancelButton = (Button) findViewById(R.id.session_cancel);
 		cancelButton.setOnClickListener(this);
 
-		Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
-				new String[] { "start", "end", "comment", "project_id" }, "_id=?",
-				new String[] { "" + currentSessionId }, null);
-		try {
-			if (cursor.moveToNext()) {
-				// found a session in progress
-				startDateTime = cursor.getLong(0);
-				endDateTime = cursor.getLong(1);
-				comment = cursor.getString(2);
-				currentProjectId = cursor.getLong(3);
-				projectName = getProjectName(currentProjectId);
+		if (currentSessionId != null) {
+			// show existing session
+			Cursor cursor = getContentResolver().query(CONTENT_URI_SESSION,
+					new String[] { "start", "end", "comment", "project_id" },
+					"_id=?", new String[] { "" + currentSessionId }, null);
+			try {
+				if (cursor.moveToNext()) {
+					// found a session in progress
+					startDateTime = cursor.getLong(0);
+					endDateTime = cursor.getLong(1);
+					comment = cursor.getString(2);
+					currentProjectId = cursor.getLong(3);
+				}
+			} finally {
+				cursor.close();
 			}
-		} finally {
-			cursor.close();
+		} else {
+			// session not created yet
+			long timeMillis = System.currentTimeMillis();
+			startDateTime = timeMillis;
+			endDateTime = timeMillis;
+			comment = null;
 		}
-
+		projectName = getProjectName(currentProjectId);
 		setupCommentFieldAutoCompletion();
 		showSession();
 	}
@@ -221,6 +237,18 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 		getContentResolver().update(CONTENT_URI_SESSION, values, "_id=?",
 				new String[] { "" + currentSessionId });
 	}
+	
+	private void createSession() {
+		ContentValues values = new ContentValues();
+		values.put("project_id", currentProjectId);
+		values.put("start", startDateTime);
+		if (endDateTime != 0) {
+			values.put("end", endDateTime);
+		}
+		values.put("comment", commentView.getText().toString());
+		Uri newSessionUri = getContentResolver().insert(CONTENT_URI_SESSION,
+				values);
+	}
 
 	public void onClick(View v) {
 		if ((v == endDateView || v == endTimeView) && isRunning) {
@@ -244,7 +272,11 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 			TimePickerDialog timePickerDialog = new TimePickerDialog(this, new SessionTimeSetListener(false), cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), DateFormat.is24HourFormat(this));
 			timePickerDialog.show();
 		} else if (v == okButton) {
-			saveSession();
+			if (currentSessionId != null) {
+				saveSession();
+			} else {
+				createSession();
+			}
 			finish();
 		} else if (v == cancelButton) {
 			finish();

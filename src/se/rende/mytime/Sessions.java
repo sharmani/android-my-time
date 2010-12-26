@@ -389,16 +389,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 	 * 
 	 */
 	private void addSession() {
-		ContentValues values = new ContentValues();
-		values.put("project_id", currentProjectId);
-		long timeMillis = System.currentTimeMillis();
-		values.put("start", timeMillis);
-		values.put("end", timeMillis);
-		Uri newSessionUri = getContentResolver().insert(CONTENT_URI_SESSION,
-				values);
-
 		Intent intent = new Intent(this, Session.class);
-		intent.setData(newSessionUri);
+		intent.setData(ContentUris.withAppendedId(CONTENT_URI_PROJECT, currentProjectId));
 		startActivity(intent);
 	}
 

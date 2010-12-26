@@ -12,7 +12,8 @@
 		</activity>
 		<activity android:name=".Sessions" android:label="@string/sessions_label">
 		</activity>
-		<activity android:name=".Session" android:label="@string/session_label">
+		<activity android:name=".Session" android:label="@string/session_label" 
+			android:windowSoftInputMode="stateHidden|adjustResize">
 		</activity>
 		<activity android:name=".About" android:label="@string/about_menu"
 			android:theme="@android:style/Theme.Dialog">
