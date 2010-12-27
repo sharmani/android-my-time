@@ -38,7 +38,6 @@ public class DatabaseImportBuilder implements ImportBuilder {
 
 	@Override
 	public long createProject(String projectName) {
-		Log.d("MyTimeLoggingImportBuilder", "MyTimeLoggingImportBuilder.createProject(" + projectName + ")");
 		ContentValues values = new ContentValues();
 		values.put("name", "imported " + projectName);
 		Uri newProject = contentResolver.insert(CONTENT_URI_PROJECT, values);
@@ -52,8 +51,6 @@ public class DatabaseImportBuilder implements ImportBuilder {
 	@Override
 	public void createSession(long projectId, String startTime, String endTime,
 			String comment) {
-		Log.d("MyTimeLoggingImportBuilder", "MyTimeLoggingImportBuilder.createSession(" 
-				+ projectId + ", " + startTime + ", " + endTime + ", " + comment + ")");
 		ContentValues values = new ContentValues();
 		values.put("project_id", projectId);
 		values.put("start", startTime);
