@@ -101,8 +101,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 		adjustButtonEnablement();
 		
 	    dbUpdateFilter = new IntentFilter(Constants.INTENT_DB_UPDATE_ACTION);
-		Log.d("onCreate", "time=" + (System.currentTimeMillis() - timeBefore) + "ms");
-
 	}
 
 	@Override
@@ -113,15 +111,12 @@ public class Sessions extends ListActivity implements OnClickListener {
 		adjustButtonEnablement();
 		
 		showSessions(getSessions(currentProjectId));
-
-		Log.d(getClass().getSimpleName(), "onResume");
 	}
 	
 	@Override
 	protected void onPause() {
 		unregisterReceiver(dbUpdateReceiver);
 		super.onPause();
-		Log.d(getClass().getSimpleName(), "onPause");
 	}
 
 	/**

@@ -101,13 +101,11 @@ public class MyTime extends ListActivity {
 		int lastVersionCode = prefs.getInt("lastVersionCode", -1);
 		if (lastVersionCode != versionCode) {
 			if (lastVersionCode == -1) {
-				Log.d(getClass().getSimpleName(), "first start");
 				tracker.setCustomVar(1, "app_type", "free", 1);
 				tracker.setCustomVar(2, "phone_manufacturer", Build.MANUFACTURER, 1);
 				tracker.setCustomVar(3, "phone_model", Build.MODEL, 1);
 			}
 			// show version info
-			Log.d(getClass().getSimpleName(), "new version");
 			new AlertDialog.Builder(this)
 					.setTitle(R.string.new_app_version_title)
 					.setMessage(R.string.new_app_version_description)

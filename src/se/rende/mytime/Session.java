@@ -83,9 +83,7 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 		} else {
 			currentProjectId = Long.parseLong(intentData.getLastPathSegment());
 		}
-		
-		Log.d("Session", "path=" + intentData.getPath());
-		
+				
 		setContentView(R.layout.session);
 
 		projectNameView = (TextView) findViewById(R.id.sessionProjectName);
