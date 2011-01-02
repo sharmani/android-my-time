@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 	<string name="h">小時</string>
 	<string name="time_report">時間報告</string>
-	<string name="no_projects">無專案 - 在選單中使用新增專案</string>
+	<string name="no_projects">無項目 - 在選單中使用新增項目</string>
 	<string name="no_sessions">無會議</string>
 	<string name="app_name">My Time</string>
-	<string name="add_project">新增專案</string>
-	<string name="edit_project">編輯專案</string>
-	<string name="delete_project">刪除專案</string>
+	<string name="add_project">新增項目</string>
+	<string name="edit_project">編輯項目</string>
+	<string name="delete_project">刪除項目</string>
 	<string name="delete_session">刪除會議</string>
-	<string name="new_project">新增專案</string>
-	<string name="new_project_name_label">專案名</string>
+	<string name="new_project">新增項目</string>
+	<string name="new_project_name_label">項目名</string>
 	<string name="ok_button_label">確定</string>
 	<string name="cancel_button_label">取消</string>
 	<string name="StartButtonLabel">開始</string>
@@ -56,7 +56,7 @@
 	<string name="projects_menu_other">其他</string>
 	<string name="projects_menu_export">匯出</string>
 	<string name="activity_name_import">匯入我的時間表</string>
-	<string name="share_project_report_label">分享專案報告</string>
+	<string name="share_project_report_label">分享項目報告</string>
 	<string name="share_project_button_label">分享</string>
 	<string name="share_project_period_label">時期</string>
 	<string name="share_project_include_week_totals_label">包含周數</string>
@@ -76,23 +76,23 @@
 	<string name="about_subtitle">簡約工作表程式</string>
 	<string name="about_copyright">版權所有 (c) 2010 Dag Rende</string>
 	<string name="about_license">Apache 許可協議，2.0 版本</string>
-	<string name="about_forum_at">Discuss features and issues at:</string>
+	<string name="about_forum_at">在以下網址中討論功能和問題：</string>
 	<string name="about_forum_url">https://groups.google.com/forum/m/#forum/my-time-for-android</string>
-	<string name="chinese_translation_by">安智網中文化（</string>
-	<string name="chinese_translation_link">http://goapk.com</string>
-	<string name="chinese_translation_by_end">）</string>
+	<string name="chinese_translation_by">GoAPK安智網中文化</string>
+	<string name="chinese_translation_link">http://www.goapk.com</string>
+	<string name="chinese_translation_by_end"/>
 	<string name="mytime_project_id">My Time</string>
-	<string name="locale_setting_action_label">Action</string>
-	<string name="locale_setting_project_label">Project</string>
-	<string name="new_app_version_title">New version</string>
-	<string name="done_button_label">Done</string>
-	<string name="discard_button_label">Discard</string>
+	<string name="locale_setting_action_label">操作</string>
+	<string name="locale_setting_project_label">項目</string>
+	<string name="new_app_version_title">新版本</string>
+	<string name="done_button_label">完成</string>
+	<string name="discard_button_label">取消</string>
 	<string name="new_app_version_description">
-		&#x2022; Faster project open
-		\n&#x2022; Weekday and date instead of year-month-date in sessions list item
-		\n&#x2022; Forum link from About box
-		\n&#x2022; Done/Discard-button in Session page
-		\n&#x2022; No session is created on Discard after Add Session
-		\n&#x2022; Running hours updated on off-on when Sessions is open
+		‧ 加快開啟項目的速度
+		\n‧ 在會議清單項中，將原來的年月日格式改成星期幾和日期的形式
+		\n‧ 在關於對話方塊中加入社區連結
+		\n‧ 在會議頁面新增完成/取消按鈕
+		\n‧ 在新增一個會議後點擊取消將不建立會議
+		\n‧ 當會議是開啟的時候，間歇的更新執行時間
 	</string>
 </resources>
