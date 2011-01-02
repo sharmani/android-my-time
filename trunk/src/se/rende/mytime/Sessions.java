@@ -21,7 +21,6 @@ import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
 
 import java.text.DateFormatSymbols;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +37,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -59,7 +57,6 @@ import android.widget.TextView;
  */
 public class Sessions extends ListActivity implements OnClickListener {
 	private static final long DAY_MILLIS = 24L * 60L * 60L * 1000L;
-	private static final SimpleDateFormat WEEKDAY_MONTHDAY_FORMAT = new java.text.SimpleDateFormat("E d");
 	private static final NumberFormat hoursFormat = NumberFormat.getInstance();
 	private static final String[] FROM = { "start", "end", "_id+5", "comment", "_id",
 			"_id+1", "_id+2", "_id+3", "_id+4" };
@@ -76,7 +73,6 @@ public class Sessions extends ListActivity implements OnClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		long timeBefore = System.currentTimeMillis();
 		super.onCreate(savedInstanceState);
 
 	    Uri intentData = getIntent().getData();
@@ -470,8 +466,11 @@ public class Sessions extends ListActivity implements OnClickListener {
 						// start
 						Calendar cal = Calendar.getInstance();
 						cal.setTimeInMillis(time);
-
-						timeView.setText(WEEKDAY_MONTHDAY_FORMAT.format(time)
+						
+						timeView.setText(
+								dateFormatSymbols.getShortWeekdays()[cal.get(Calendar.DAY_OF_WEEK)]
+								+ " "
+								+ cal.get(Calendar.DATE)
 								+ " "
 								+ DateFormat.getTimeFormat(Sessions.this)
 										.format(time));
@@ -493,7 +492,9 @@ public class Sessions extends ListActivity implements OnClickListener {
 						timeView.setVisibility(View.VISIBLE);
 						timeView.setMaxHeight(100);
 						timeView.setText(
-								WEEKDAY_MONTHDAY_FORMAT.format(time)
+								dateFormatSymbols.getShortWeekdays()[cal.get(Calendar.DAY_OF_WEEK)]
+ 								+ " "
+ 								+ cal.get(Calendar.DATE)
 								+ " "
 								+ DateFormat.getTimeFormat(Sessions.this).format(time));
 					}
