@@ -32,7 +32,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -244,8 +243,6 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 			values.put("end", endDateTime);
 		}
 		values.put("comment", commentView.getText().toString());
-		Uri newSessionUri = getContentResolver().insert(CONTENT_URI_SESSION,
-				values);
 	}
 
 	public void onClick(View v) {
