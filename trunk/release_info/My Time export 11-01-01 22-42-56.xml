@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<my-time-database ver="1">
+  <project id="24" name="Alien culture studies">
+  </project>
+  <project id="23" name="Good bye meetings">
+  </project>
+  <project id="19" name="Medical tests">
+    <session id="545" start="1293260412047" end="1293276612047" comment="" />
+    <session id="544" start="1293346807413" end="1293363007413" comment="" />
+    <session id="551" start="1293435032234" end="1293449432234" comment="overslept" />
+    <session id="555" start="1293519640775" end="1293535840775" comment="" />
+    <session id="554" start="1293606038287" end="1293622238287" comment="" />
+    <session id="553" start="1293692436234" end="1293708636234" comment="" />
+    <session id="546" start="1293918373585" end="1293918374242" />
+    <session id="547" start="1293918376257" end="1293918386980" />
+    <session id="548" start="1293918387700" end="1293918388333" />
+    <session id="549" start="1293918389144" end="1293918389798" />
+    <session id="550" start="1293918390737" end="1293918391369" />
+    <session id="556" start="1293919004391" />
+  </project>
+  <project id="21" name="Order good books">
+  </project>
+  <project id="22" name="Team building">
+  </project>
+  <project id="20" name="Zero gravity training">
+    <session id="542" start="1293918199682" end="1293918217178" />
+    <session id="543" start="1293918338231" end="1293918362647" />
+  </project>
+</my-time-database>
