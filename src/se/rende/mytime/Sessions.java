@@ -37,7 +37,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -452,7 +451,8 @@ public class Sessions extends ListActivity implements OnClickListener {
 				long time = cursor.getLong(columnIndex);
 				if (cursor.isNull(columnIndex)) {
 					timeView.setText(getString(R.string.project_status_running));
-					Log.d(getClass().getSimpleName(), "running");
+					timeView.setVisibility(View.VISIBLE);
+					timeView.setMaxHeight(100);
 				} else {
 					if (columnIndex == 1) {
 						// end
