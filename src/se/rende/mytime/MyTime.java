@@ -85,6 +85,28 @@ public class MyTime extends ListActivity {
 		tracker = GoogleAnalyticsTracker.getInstance();
 		tracker.start("UA-17614355-1", 300, this);
 		
+		handleNewVersionInfoAndGAUserVariables(prefs);
+		
+		tracker.trackPageView("/start");
+	    
+	    
+	    setContentView(R.layout.main);
+		getListView().setOnCreateContextMenuListener(this);
+		runningProjectId = getRunningProjectId();
+		projectListCursor = getProjects();
+		showProjects(projectListCursor);
+
+		scanPlugIns();
+	    dbUpdateFilter = new IntentFilter(Constants.INTENT_DB_UPDATE_ACTION);
+	}
+
+	/**
+	 * If first start on this device, register device model in GA user variable.
+	 * If new os version - register in GA user variable.
+	 * If new app version - show version info.
+	 * @param prefs used to track first start and current app version
+	 */
+	private void handleNewVersionInfoAndGAUserVariables(SharedPreferences prefs) {
 		int versionCode = -1;
 		String versionName = "";
 		try {
@@ -102,15 +124,14 @@ public class MyTime extends ListActivity {
 		if (lastVersionCode != versionCode) {
 			if (lastVersionCode == -1) {
 				tracker.setCustomVar(1, "app_type", "free", 1);
-				tracker.setCustomVar(2, "phone_manufacturer", Build.MANUFACTURER, 1);
-				tracker.setCustomVar(3, "phone_model", Build.MODEL, 1);
+				tracker.setCustomVar(2, "phone_model", Build.MODEL, 1);
 			}
 			// show version info
 			new AlertDialog.Builder(this)
 					.setTitle(R.string.new_app_version_title)
 					.setMessage(R.string.new_app_version_description)
 					.setPositiveButton("OK", null).show();
-			tracker.setCustomVar(4, "app version", versionName, 1);
+			tracker.setCustomVar(3, "app version", versionName, 1);
 			edit.putInt("lastVersionCode", versionCode);
 			edit.commit();
 		}
@@ -121,18 +142,6 @@ public class MyTime extends ListActivity {
 			edit.putString("os_rel", Build.VERSION.RELEASE);
 			edit.commit();
 		}
-		
-		tracker.trackPageView("/start");
-	    
-	    
-	    setContentView(R.layout.main);
-		getListView().setOnCreateContextMenuListener(this);
-		runningProjectId = getRunningProjectId();
-		projectListCursor = getProjects();
-		showProjects(projectListCursor);
-
-		scanPlugIns();
-	    dbUpdateFilter = new IntentFilter(Constants.INTENT_DB_UPDATE_ACTION);
 	}
 
 	@Override
