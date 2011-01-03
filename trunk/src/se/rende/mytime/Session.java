@@ -243,6 +243,7 @@ public class Session extends Activity implements OnClickListener, OnItemClickLis
 			values.put("end", endDateTime);
 		}
 		values.put("comment", commentView.getText().toString());
+		getContentResolver().insert(CONTENT_URI_SESSION, values);
 	}
 
 	public void onClick(View v) {
