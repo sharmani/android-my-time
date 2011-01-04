@@ -17,29 +17,43 @@ package se.rende.mytime.export;
 
 import static se.rende.mytime.Constants.CONTENT_URI_PROJECT;
 import static se.rende.mytime.Constants.CONTENT_URI_SESSION;
+
+import java.util.HashSet;
+import java.util.Set;
+
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
 
 /**
  * Bulder that creates projects and session in the My Time database.
  * @author Dag Rende
  */
 public class DatabaseImportBuilder implements ImportBuilder {
-
-	private int projectId = 0;
 	private final ContentResolver contentResolver;
-
+	private Set<String> existingProjectNames= new HashSet<String>();
+	
 	public DatabaseImportBuilder(ContentResolver contentResolver) {
 		this.contentResolver = contentResolver;
+		
+		Cursor cursor = contentResolver.query(CONTENT_URI_PROJECT, new String[] {"name"}, null, null, null);
+		while (cursor.moveToNext()) {
+			existingProjectNames.add(cursor.getString(0));
+		}
 	}
 
 	@Override
 	public long createProject(String projectName) {
 		ContentValues values = new ContentValues();
-		values.put("name", "imported " + projectName);
+		
+		// obtain a new unique project name
+		String newProjectName = projectName;
+		for (int i = 1; existingProjectNames.contains(newProjectName); i++) {
+			newProjectName = projectName + " " + i;
+		}
+		
+		values.put("name", newProjectName);
 		Uri newProject = contentResolver.insert(CONTENT_URI_PROJECT, values);
 		Cursor cursor = contentResolver.query(newProject, new String[] {"_id"}, null, null, null);
 		if (cursor.moveToNext()) {
