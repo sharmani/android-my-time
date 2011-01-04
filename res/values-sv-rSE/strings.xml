@@ -15,7 +15,7 @@
 	<string name="cancel_button_label">Avbryt</string>
 	<string name="StartButtonLabel">Start</string>
 	<string name="StopButtonLabel">Stopp</string>
-	<string name="sessions_label">Arbetspass</string>
+	<string name="sessions_label">Arbetspass-lista</string>
 	<string name="session_label">Arbetspass</string>
 	<string name="FromLabel">
 		<b>Från</b>
