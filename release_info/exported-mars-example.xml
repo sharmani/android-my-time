@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<my-time-database ver="1">
+  <project id="2" name="Alien culture studies">
+  </project>
+  <project id="3" name="Good bye meetings">
+  </project>
+  <project id="4" name="Medical tests">
+    <session id="2" start="1292914807413" end="1293260407413" comment="cabin fever stress test" />
+    <session id="3" start="1293260412047" end="1293276612047" comment="care of small wounds" />
+    <session id="4" start="1293435032234" end="1293449432234" comment="overslept, low pressure peristalsis test" />
+    <session id="5" start="1293519640775" end="1293535840775" comment="oxygen poisoning test" />
+    <session id="13" start="1294094231212" />
+  </project>
+  <project id="5" name="Order good books">
+  </project>
+  <project id="6" name="Team building">
+  </project>
+  <project id="7" name="Zero gravity training">
+    <session id="9" start="1293918199682" end="1293918217178" />
+    <session id="10" start="1293918338231" end="1293918362647" />
+  </project>
+</my-time-database>
