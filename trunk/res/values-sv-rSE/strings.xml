@@ -3,20 +3,20 @@
 	<string name="h">tim</string>
 	<string name="time_report">Tidrapport</string>
 	<string name="no_projects">Inga projekt - använd menyn Nytt projekt</string>
-	<string name="no_sessions">Inga sessioner</string>
+	<string name="no_sessions">Inga arbetspass</string>
 	<string name="app_name">My Time</string>
 	<string name="add_project">Nytt projekt</string>
 	<string name="edit_project">Redigera projekt</string>
 	<string name="delete_project">Ta bort projekt</string>
-	<string name="delete_session">Ta bort session</string>
+	<string name="delete_session">Ta bort arbetspass</string>
 	<string name="new_project">Nytt projekt</string>
 	<string name="new_project_name_label">Projektnamn</string>
 	<string name="ok_button_label">OK</string>
 	<string name="cancel_button_label">Avbryt</string>
 	<string name="StartButtonLabel">Start</string>
 	<string name="StopButtonLabel">Stopp</string>
-	<string name="sessions_label">Sessioner</string>
-	<string name="session_label">Session</string>
+	<string name="sessions_label">Arbetspass</string>
+	<string name="session_label">Arbetspass</string>
 	<string name="FromLabel">
 		<b>Från</b>
 	</string>
@@ -34,7 +34,7 @@
 	<string name="lunch_start_summary">Lunch börjar</string>
 	<string name="lunch_end_label">Lunch till</string>
 	<string name="lunch_end_summary">Lunch slutar</string>
-	<string name="add_session">Ny session</string>
+	<string name="add_session">Nytt arbetspass</string>
 	<string name="about_version">Version</string>
 	<string name="exclude_lunch_label">Dra bort lunch</string>
 	<string name="exclude_lunch_summary">Dra bort lunchtid som överlappar arbetstid</string>
@@ -66,7 +66,7 @@
 	<string name="share_period_last_month">Förra månaden</string>
 	<string name="share_period_this_week">Denna vecka</string>
 	<string name="share_period_last_week">Förra veckan</string>
-	<string name="share_period_all_sessions">Alla sessioner</string>
+	<string name="share_period_all_sessions">Alla arbetspass</string>
 	<string name="report_date_line_week">Vecka</string>
 	<string name="report_date_line_total">summa</string>
 	<string name="share_error_message">Fel vid skicka</string>
@@ -89,10 +89,10 @@
 	<string name="discard_button_label">Tillbaka</string>
 	<string name="new_app_version_description">
 		&#x2022; Snabbare att öppna projekt
-		\n&#x2022; Veckodag och datum istället för år-månad-dag på sessionsrader
+		\n&#x2022; Veckodag och datum istället för år-månad-dag på arbetspass-rader
 		\n&#x2022; Forumlänk i Om-sidan
-		\n&#x2022; Färdig/Tillbaka-knapp i sessions-sidan
-		\n&#x2022; Ingen session skapas vid Tillbaka efter Ny session
-		\n&#x2022; Pågående tid uppdateras vid av-på med Sessioner öppen
+		\n&#x2022; Färdig/Tillbaka-knapp på arbetspass-sidan
+		\n&#x2022; Inget arbetspass skapas vid Tillbaka efter Nytt arbetspass
+		\n&#x2022; Pågående tid uppdateras vid av-på med Arbetspass öppen
 		</string>
 </resources>

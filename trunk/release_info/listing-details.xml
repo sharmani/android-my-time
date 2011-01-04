@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<listing-details>
+	<description>
+Keeps projects and sessions with date/times and hours worked. Just click start to add a new session. Reporting by mail or other.
+
+Use forum link below to suggest features and discuss issues with me and other users.
+	</description>
+	
+	<recent-changes>
+This version of My Time focus on quality and compatibility with small screen devices.
+A coming pay-version of will have many of the features you have requested in the Android Market comments.
+
+• Faster opening sessions list
+• Weekday and date instead of year-month-date in sessions list item
+• About box has link to new discussion forum
+• Done/Discard-button in Session page
+• The soft keyboard will not overlap the comment field even with a multiple line comment
+• No session is created on Discard after Add Session
+• Running hours updated on off-on when Sessions is open
+• Works on small screen devices - like HTC Wildfire and SonyEricsson X10 Mini
+• New version info on startup
+	</recent-changes>
+	
+	<promo-text>
+	</promo-text>
+	
+	<contact-information>
+		<website>https://groups.google.com/forum/m/#forum/my-time-for-android</website>
+	</contact-information>
+</listing-details>
