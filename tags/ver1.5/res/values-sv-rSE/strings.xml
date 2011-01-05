@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+	<string name="h">tim</string>
+	<string name="time_report">Tidrapport</string>
+	<string name="no_projects">Inga projekt - använd menyn Nytt projekt</string>
+	<string name="no_sessions">Inga arbetspass</string>
+	<string name="app_name">My Time</string>
+	<string name="add_project">Nytt projekt</string>
+	<string name="edit_project">Redigera projekt</string>
+	<string name="delete_project">Ta bort projekt</string>
+	<string name="delete_session">Ta bort arbetspass</string>
+	<string name="new_project">Nytt projekt</string>
+	<string name="new_project_name_label">Projektnamn</string>
+	<string name="ok_button_label">OK</string>
+	<string name="cancel_button_label">Avbryt</string>
+	<string name="StartButtonLabel">Start</string>
+	<string name="StopButtonLabel">Stopp</string>
+	<string name="sessions_label">Arbetspass-lista</string>
+	<string name="session_label">Arbetspass</string>
+	<string name="FromLabel">
+		<b>Från</b>
+	</string>
+	<string name="ToLabel">
+		<b>Till</b>
+	</string>
+	<string name="WhatLabel">
+		<b>Vad</b>
+	</string>
+	<string name="about_menu">Om</string>
+	<string name="settings_menu_label">Inställningar</string>
+	<string name="precision_setting_label">Precision</string>
+	<string name="precision_setting_summary">Runda av arbetstimmar till multipel av</string>
+	<string name="lunch_start_label">Lunch från</string>
+	<string name="lunch_start_summary">Lunch börjar</string>
+	<string name="lunch_end_label">Lunch till</string>
+	<string name="lunch_end_summary">Lunch slutar</string>
+	<string name="add_session">Nytt arbetspass</string>
+	<string name="about_version">Version</string>
+	<string name="exclude_lunch_label">Dra bort lunch</string>
+	<string name="exclude_lunch_summary">Dra bort lunchtid som överlappar arbetstid</string>
+	<string name="pref_precision_key">precision</string>
+	<string name="pref_exclude_lunch_time_key">exclude_lunch_time</string>
+	<string name="pref_lunch_start_key">lunch_start</string>
+	<string name="pref_lunch_end_key">lunch_end</string>
+	<string name="pref_share_project_period_key">share_project_period</string>
+	<string name="pref_share_project_include_week_totals_key">share_project_include_week_totals</string>
+	<string name="pref_share_project_include_month_totals_key">share_project_include_month_totals</string>
+	<string name="pref_share_project_group_by_day_key">share_project_group_by_day</string>
+	<string name="total_label">totalt</string>
+	<string name="hour_abbrev">tim</string>
+	<string name="share_subject">My Time-rapport</string>
+	<string name="share_title">Skicka tidrapport</string>
+	<string name="export_title">Exportera alla tidrapporter</string>
+	<string name="export_menu_item">Exportera</string>
+	<string name="share_menu_item">Skicka</string>
+	<string name="projects_menu_other">Annat</string>
+	<string name="projects_menu_export">Exportera</string>
+	<string name="activity_name_import">My time Importera</string>
+	<string name="share_project_report_label">Skicka projektrapport</string>
+	<string name="share_project_button_label">Skicka</string>
+	<string name="share_project_period_label">Period</string>
+	<string name="share_project_include_week_totals_label">Ta med veckosummor</string>
+	<string name="share_project_include_month_totals_label">Ta med månadssummor</string>
+	<string name="share_project_group_by_day_label">Summa per dag</string>
+	<string name="share_period_this_month">Denna månad</string>
+	<string name="share_period_last_month">Förra månaden</string>
+	<string name="share_period_this_week">Denna vecka</string>
+	<string name="share_period_last_week">Förra veckan</string>
+	<string name="share_period_all_sessions">Alla arbetspass</string>
+	<string name="report_date_line_week">Vecka</string>
+	<string name="report_date_line_total">summa</string>
+	<string name="share_error_message">Fel vid skicka</string>
+	<string name="project_status_running">pågår</string>
+	<string name="alert_message_error">fel</string>
+	<string name="alert_message_unknown_uri">Okänd URL</string>
+	<string name="about_subtitle">Minimalistiskt tidrapport-program.</string>
+	<string name="about_copyright">Copyright (c) 2010 Dag Rende</string>
+	<string name="about_license">Apache License, Version 2.0</string>
+	<string name="about_forum_at">Diskutera möjligheter och problem på:</string>
+	<string name="about_forum_url">https://groups.google.com/forum/m/#forum/my-time-for-android</string>
+	<string name="chinese_translation_by" >Kinesisk översättning av </string>
+	<string name="chinese_translation_link">http://goapk.com</string>
+	<string name="chinese_translation_by_end"></string>
+	<string name="mytime_project_id">My Time</string>
+	<string name="locale_setting_action_label">Action</string>
+	<string name="locale_setting_project_label">Project</string>
+	<string name="new_app_version_title">Ny version</string>
+	<string name="done_button_label">Färdig</string>
+	<string name="discard_button_label">Tillbaka</string>
+	<string name="new_app_version_description">
+		&#x2022; Snabbare att öppna projekt
+		\n&#x2022; Veckodag och datum istället för år-månad-dag på arbetspass-rader
+		\n&#x2022; Forumlänk i Om-sidan
+		\n&#x2022; Färdig/Tillbaka-knapp på arbetspass-sidan
+		\n&#x2022; Inget arbetspass skapas vid Tillbaka efter Nytt arbetspass
+		\n&#x2022; Pågående tid uppdateras vid av-på med Arbetspass öppen
+		</string>
+</resources>

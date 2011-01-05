@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+	<string name="h">小時</string>
+	<string name="time_report">時間報告</string>
+	<string name="no_projects">無項目 - 在選單中使用新增項目</string>
+	<string name="no_sessions">無會議</string>
+	<string name="app_name">My Time</string>
+	<string name="add_project">新增項目</string>
+	<string name="edit_project">編輯項目</string>
+	<string name="delete_project">刪除項目</string>
+	<string name="delete_session">刪除會議</string>
+	<string name="new_project">新增項目</string>
+	<string name="new_project_name_label">項目名</string>
+	<string name="ok_button_label">確定</string>
+	<string name="cancel_button_label">取消</string>
+	<string name="StartButtonLabel">開始</string>
+	<string name="StopButtonLabel">停止</string>
+	<string name="sessions_label">會議</string>
+	<string name="session_label">會議</string>
+	<string name="FromLabel">
+		<b>從</b>
+	</string>
+	<string name="ToLabel">
+		<b>到</b>
+	</string>
+	<string name="WhatLabel">
+		<b>什麼事</b>
+	</string>
+	<string name="about_menu">關於</string>
+	<string name="settings_menu_label">設定</string>
+	<string name="precision_setting_label">精確度</string>
+	<string name="precision_setting_summary">工作時間除以以下值後四捨五入得到的小時數</string>
+	<string name="lunch_start_label">午餐開始</string>
+	<string name="lunch_start_summary">午餐開始於</string>
+	<string name="lunch_end_label">午餐完畢</string>
+	<string name="lunch_end_summary">午餐結束於</string>
+	<string name="add_session">新增會議</string>
+	<string name="about_version">版本</string>
+	<string name="exclude_lunch_label">排除午餐</string>
+	<string name="exclude_lunch_summary">排除與工作時間重疊的午餐時間</string>
+	<string name="pref_precision_key">precision</string>
+	<string name="pref_exclude_lunch_time_key">exclude_lunch_time</string>
+	<string name="pref_lunch_start_key">lunch_start</string>
+	<string name="pref_lunch_end_key">lunch_end</string>
+	<string name="pref_share_project_period_key">share_project_period</string>
+	<string name="pref_share_project_include_week_totals_key">share_project_include_week_totals</string>
+	<string name="pref_share_project_include_month_totals_key">share_project_include_month_totals</string>
+	<string name="pref_share_project_group_by_day_key">share_project_group_by_day</string>
+	<string name="total_label">總計</string>
+	<string name="hour_abbrev">小時</string>
+	<string name="share_subject">我的時間表報告</string>
+	<string name="share_title">分享時間報告</string>
+	<string name="export_title">匯出所有的時間報告</string>
+	<string name="export_menu_item">匯出</string>
+	<string name="share_menu_item">分享</string>
+	<string name="projects_menu_other">其他</string>
+	<string name="projects_menu_export">匯出</string>
+	<string name="activity_name_import">匯入我的時間表</string>
+	<string name="share_project_report_label">分享項目報告</string>
+	<string name="share_project_button_label">分享</string>
+	<string name="share_project_period_label">時期</string>
+	<string name="share_project_include_week_totals_label">包含周數</string>
+	<string name="share_project_include_month_totals_label">包含月數</string>
+	<string name="share_project_group_by_day_label">每天總數</string>
+	<string name="share_period_this_month">本月</string>
+	<string name="share_period_last_month">上個月</string>
+	<string name="share_period_this_week">本周</string>
+	<string name="share_period_last_week">上周</string>
+	<string name="share_period_all_sessions">所有會議</string>
+	<string name="report_date_line_week">周</string>
+	<string name="report_date_line_total">總計</string>
+	<string name="share_error_message">分享錯誤</string>
+	<string name="project_status_running">執行中</string>
+	<string name="alert_message_error">錯誤</string>
+	<string name="alert_message_unknown_uri">未知的 URI</string>
+	<string name="about_subtitle">簡約工作表程式</string>
+	<string name="about_copyright">版權所有 (c) 2010 Dag Rende</string>
+	<string name="about_license">Apache 許可協議，2.0 版本</string>
+	<string name="about_forum_at">在以下網址中討論功能和問題：</string>
+	<string name="about_forum_url">https://groups.google.com/forum/m/#forum/my-time-for-android</string>
+	<string name="chinese_translation_by">GoAPK安智網中文化</string>
+	<string name="chinese_translation_link">http://www.goapk.com</string>
+	<string name="chinese_translation_by_end"/>
+	<string name="mytime_project_id">My Time</string>
+	<string name="locale_setting_action_label">操作</string>
+	<string name="locale_setting_project_label">項目</string>
+	<string name="new_app_version_title">新版本</string>
+	<string name="done_button_label">完成</string>
+	<string name="discard_button_label">取消</string>
+	<string name="new_app_version_description">
+		‧ 加快開啟項目的速度
+		\n‧ 在會議清單項中，將原來的年月日格式改成星期幾和日期的形式
+		\n‧ 在關於對話方塊中加入社區連結
+		\n‧ 在會議頁面新增完成/取消按鈕
+		\n‧ 在新增一個會議後點擊取消將不建立會議
+		\n‧ 當會議是開啟的時候，間歇的更新執行時間
+	</string>
+</resources>

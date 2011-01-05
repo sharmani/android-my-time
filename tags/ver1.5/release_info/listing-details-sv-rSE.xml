@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<listing-details>
+	<description>
+Håll reda på projekt och arbetspass med datum, tidpunkt och arbetade timmar. Klicka Start när du börjar och Stopp när du är klar för att lägga till ett arbetspass.
+Skicka tidrapport via mail eller annat program.
+
+Använd forum-länken nedan för att föreslå nya funktioner eller diskutera problem, med mig och andra användare.
+	</description>
+	
+	<recent-changes>
+Denna version av My Time fokuserar på kvalitet och på på telefoner med liten skärm.
+En kommande betal-version kommer att ha många av de funktioner ni har eftersfrågat i Android Market-kommentarer.
+
+• Snabbare att öppna listan med arbetspass
+• Veckodag och datum istället för år-månad-dag i arbetspass-listan
+• Färdig/Tillbaka-knapp i Arbetspass-sidan
+• Skärm-tangentbordet överlappar inte Vad-rutan
+• Fungerar på telefoner med liten skärm - t ex HTC Wildfire
+	</recent-changes>
+	
+	<promo-text>
+	</promo-text>
+	
+	<contact-information>
+		<website>http://rende.se/my-time</website> <!-- redirect to https://groups.google.com/forum/m/#forum/my-time-for-android -->
+	</contact-information>
+</listing-details>

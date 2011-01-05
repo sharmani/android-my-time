@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent"
+	android:orientation="vertical">
+
+	<ScrollView android:layout_width="fill_parent"
+		android:layout_height="1px" android:layout_weight="1"
+		android:fillViewport="true">
+		<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:orientation="vertical" android:paddingLeft="10dip"
+			android:paddingRight="10dip" android:paddingTop="10dip">
+			<TextView android:id="@+id/sessionProjectName"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:textSize="22sp" android:paddingBottom="10dip" android:text="Saab" />
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/FromLabel"></TextView>
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:orientation="horizontal">
+				<Button android:id="@+id/SessionStartDate"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:text="10-05-16" android:paddingLeft="15dip"
+					android:paddingRight="15dip" android:paddingBottom="10dip"
+					android:paddingTop="5dip" android:textSize="18sp" />
+				<Button android:id="@+id/SessionStartTime"
+					android:layout_width="wrap_content" android:layout_height="wrap_content"
+					android:text="8:02" android:paddingTop="5dip" android:paddingLeft="15dip"
+					android:paddingRight="15dip" android:paddingBottom="10dip"
+					android:textSize="18sp" />
+			</LinearLayout>
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/ToLabel"></TextView>
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:orientation="horizontal">
+				<Button android:id="@+id/SessionEndDate"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:text="10-05-16" android:paddingLeft="15dip"
+					android:paddingRight="15dip" android:paddingBottom="10dip"
+					android:paddingTop="5dip" android:textSize="18sp" />
+				<Button android:id="@+id/SessionEndTime"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:text="8:02" android:paddingTop="5dip" android:paddingLeft="15dip"
+					android:paddingRight="15dip" android:paddingBottom="10dip"
+					android:textSize="18sp" />
+			</LinearLayout>
+			<TextView android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:text="@string/WhatLabel" />
+			<AutoCompleteTextView android:id="@+id/SessionCommentEditText"
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:textSize="18sp" android:text="A comment text example" />
+		</LinearLayout>
+	</ScrollView>
+
+	<LinearLayout android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal"
+		style="@android:style/ButtonBar">
+
+		<Button android:id="@+id/session_ok" android:layout_width="0dip"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:text="@string/done_button_label" />
+
+		<Button android:id="@+id/session_cancel" android:layout_width="0dip"
+			android:layout_height="wrap_content" android:layout_weight="1"
+			android:text="@string/discard_button_label" />
+
+	</LinearLayout>
+
+</LinearLayout> 
