@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <listing-details>
 	<description>
-Håller reda på projekt och arbetspass med datum, tidpunkt och arbetade timmar. Klicka Start när du börjar och Stopp när du är klar för att lägga till ett arbetspass.
+Håll reda på projekt och arbetspass med datum, tidpunkt och arbetade timmar. Klicka Start när du börjar och Stopp när du är klar för att lägga till ett arbetspass.
 Skicka tidrapport via mail eller annat program.
 
 Använd forum-länken nedan för att föreslå nya funktioner eller diskutera problem, med mig och andra användare.
@@ -22,6 +22,6 @@ En kommande betal-version kommer att ha många av de funktioner ni har eftersfr�
 	</promo-text>
 	
 	<contact-information>
-		<website>https://groups.google.com/forum/m/#forum/my-time-for-android</website>
+		<website>http://rende.se/my-time</website> <!-- redirect to https://groups.google.com/forum/m/#forum/my-time-for-android -->
 	</contact-information>
 </listing-details>

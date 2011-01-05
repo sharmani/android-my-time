@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <listing-details>
 	<description>
-Keeps projects and sessions with date/times and hours worked. Just click start to add a new session. Reporting by mail or other.
+Keep projects and sessions with date/times and worked hours. Just click start to add a new session. Reporting by mail or other.
 
 Use forum link below to suggest features and discuss issues with me and other users.
 	</description>
@@ -22,6 +22,6 @@ A coming pay-version of will have many of the features you have requested in the
 	</promo-text>
 	
 	<contact-information>
-		<website>https://groups.google.com/forum/m/#forum/my-time-for-android</website>
+		<website>http://rende.se/my-time</website> <!-- redirect to https://groups.google.com/forum/m/#forum/my-time-for-android -->
 	</contact-information>
 </listing-details>
